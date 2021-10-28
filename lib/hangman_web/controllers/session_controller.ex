@@ -6,8 +6,8 @@ defmodule HangmanWeb.SessionController do
 
     action_fallback HangmanWeb.UserErrorController
 
-    swagger_path :get_user do
-        get("/api/login")
+    swagger_path :authenticate_user do
+        post("/api/login")
         summary("Validate user")
         description("Return the id of the user if it's found and the password is valid")
         response(code(:ok), "Success")

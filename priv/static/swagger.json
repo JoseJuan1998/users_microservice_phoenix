@@ -94,6 +94,26 @@
         "description": "Return JSON with all users listed in the database",
         "deprecated": false
       }
+    },
+    "/api/login": {
+      "post": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Validate user",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "HangmanWeb.SessionController.authenticate_user",
+        "description": "Return the id of the user if it's found and the password is valid",
+        "deprecated": false
+      }
     }
   },
   "info": {
