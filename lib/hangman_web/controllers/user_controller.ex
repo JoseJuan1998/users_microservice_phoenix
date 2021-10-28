@@ -7,8 +7,9 @@ defmodule HangmanWeb.UserController do
   use PhoenixSwagger
 
   action_fallback HangmanWeb.UserErrorController
+
   swagger_path :get_users do
-    get("/users")
+    get("/api/users")
     summary("All Users")
     description("Return JSON with all users listed in the database")
     response(code(:ok), "Success")
@@ -29,7 +30,7 @@ defmodule HangmanWeb.UserController do
   end
 
   swagger_path :get_user do
-    get("/users/:id")
+    get("/api/users/:id")
     summary("Specific User")
     description("Return JSON with an especific user")
     response(code(:ok), "Success")
@@ -49,7 +50,7 @@ defmodule HangmanWeb.UserController do
   end
 
   swagger_path :create_user do
-    post("/users")
+    post("/api/users")
     summary("Add a new user")
     description("Create a new user in the database")
     response(code(201), "Created")
@@ -72,7 +73,7 @@ defmodule HangmanWeb.UserController do
   end
 
   swagger_path :update_user do
-    put("/users/:id")
+    put("/api/users/:id")
     summary("Update a user")
     description("Update the user information")
     response(code(205), "Success")
@@ -90,11 +91,13 @@ defmodule HangmanWeb.UserController do
         |> render("user.json", %{user: user})
       {:error, %Ecto.Changeset{} = changeset} ->
         {:error, changeset}
+      true ->
+        {:error, "Can't update"}
     end
   end
 
   swagger_path :delete_user do
-    delete("/users/:id")
+    delete("/api/users/:id")
     summary("Delte a User")
     description("Return JSON with an especific user that was deleted")
     response(code(205), "Success")

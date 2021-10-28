@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "paths": {
-    "/users/:id": {
+    "/api/users/:id": {
       "put": {
         "tags": [
           "User"
@@ -57,7 +57,7 @@
         "deprecated": false
       }
     },
-    "/users": {
+    "/api/users": {
       "post": {
         "tags": [
           "User"

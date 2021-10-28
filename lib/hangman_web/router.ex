@@ -22,6 +22,10 @@ defmodule HangmanWeb.Router do
     post "/users", UserController, :create_user
     put "/users/:id", UserController, :update_user
     delete "/users/:id", UserController, :delete_user
+
+    options "/login", OptionsController, :options
+
+    post "/login", SessionController, :authenticate_user
   end
 
   ## Swagger

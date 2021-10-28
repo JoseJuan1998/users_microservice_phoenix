@@ -81,8 +81,9 @@ defmodule Hangman.Accounts do
 
   """
   def update_user(%User{} = user, attrs) do
+
     cred_changeset =
-      if attrs["credential"]["password"] == nil do
+      if attrs.credential["password"] == "" do
         &Credential.changeset/2
       else
         &Credential.registration_changeset/2
@@ -128,5 +129,33 @@ defmodule Hangman.Accounts do
     user
     |> User.changeset(attrs)
     |> Ecto.Changeset.cast_assoc(:credential, with: cred_changeset)
+  end
+
+  @doc """
+  Athenticate a user.
+
+  ## Examples
+
+      iex> Repo.get_by(Credential, email: email) |> Repo.preload(:user)
+      {:ok, %User{}}
+
+      Argon2.verify_pass(given_password, cred.password_hash)
+
+      iex> update_user(user, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+
+  def authenticate_by_email_password(email, given_password) do
+    cred = Repo.get_by(Credential, email: email) |> Repo.preload(:user)
+
+    cond do
+      cred && Argon2.verify_pass(given_password, cred.password_hash) ->
+        {:ok, cred.user}
+      cred ->
+        {:error, :unauthorized}
+      true ->
+        {:error, :not_found}
+    end
   end
 end
