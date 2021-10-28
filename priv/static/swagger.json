@@ -1,0 +1,105 @@
+{
+  "swagger": "2.0",
+  "paths": {
+    "/users/:id": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update a user",
+        "responses": {
+          "205": {
+            "description": "Success"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "HangmanWeb.UserController.update_user",
+        "description": "Update the user information",
+        "deprecated": false
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Specific User",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "HangmanWeb.UserController.get_user",
+        "description": "Return JSON with an especific user",
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Delte a User",
+        "responses": {
+          "205": {
+            "description": "Success"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "HangmanWeb.UserController.delete_user",
+        "description": "Return JSON with an especific user that was deleted",
+        "deprecated": false
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Add a new user",
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "HangmanWeb.UserController.create_user",
+        "description": "Create a new user in the database",
+        "deprecated": false
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "All Users",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "HangmanWeb.UserController.get_users",
+        "description": "Return JSON with all users listed in the database",
+        "deprecated": false
+      }
+    }
+  },
+  "info": {
+    "version": "1.0",
+    "title": "Users API"
+  },
+  "host": "localhost:4000",
+  "definitions": {}
+}
