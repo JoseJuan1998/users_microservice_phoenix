@@ -8,6 +8,7 @@ defmodule HangmanWeb.Router do
       "http://localhost:3000"
     ]
     plug :accepts, ["json"]
+    plug :fetch_session
   end
 
   scope "/api", HangmanWeb do
@@ -24,8 +25,10 @@ defmodule HangmanWeb.Router do
     delete "/users/:id", UserController, :delete_user
 
     options "/login", OptionsController, :options
+    options "/logout", OptionsController, :options
 
-    post "/login", SessionController, :authenticate_user
+    post "/login", SessionController, :create_session
+    delete "/logout", SessionController, :delete_session
   end
 
   ## Swagger

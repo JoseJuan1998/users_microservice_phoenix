@@ -95,12 +95,32 @@
         "deprecated": false
       }
     },
+    "/api/logout": {
+      "delete": {
+        "tags": [
+          "Session"
+        ],
+        "summary": "Delete session",
+        "responses": {
+          "205": {
+            "description": "No Response"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "operationId": "HangmanWeb.SessionController.delete_session",
+        "description": "Delete the session",
+        "deprecated": false
+      }
+    },
     "/api/login": {
       "post": {
         "tags": [
           "Session"
         ],
-        "summary": "Validate user",
+        "summary": "Create session",
         "responses": {
           "200": {
             "description": "Success"
@@ -110,8 +130,8 @@
           "application/json"
         ],
         "parameters": [],
-        "operationId": "HangmanWeb.SessionController.authenticate_user",
-        "description": "Return the id of the user if it's found and the password is valid",
+        "operationId": "HangmanWeb.SessionController.create_session",
+        "description": "Return the id of the user if it's found and the password is valid and create a session",
         "deprecated": false
       }
     }
