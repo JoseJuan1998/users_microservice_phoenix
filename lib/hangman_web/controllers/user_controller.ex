@@ -237,7 +237,7 @@ defmodule HangmanWeb.UserController do
           params["credential"] != nil ->
             %{"credential" => Map.put(params["credential"], "id", params["id"])}
           true ->
-            %{"id" => params["id"]}
+            %{}
         end
 
         case Accounts.update_user(user, new_params) do

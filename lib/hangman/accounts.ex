@@ -74,7 +74,7 @@ defmodule Hangman.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_user(%User{} = user, attrs) do
+  def update_user(%User{} = user, attrs \\ %{}) do
 
     cond do
       attrs["credential"]["password"] != nil && attrs["credential"]["email"] == nil->
@@ -87,14 +87,14 @@ defmodule Hangman.Accounts do
         |> User.changeset(attrs)
         |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
         |> Repo.update()
-      attrs["credential"] == nil ->
+      attrs["credential"] == nil && attrs["name"] != nil->
         user
         |> User.changeset(attrs)
         |> Repo.update()
       attrs["credential"]["email"] != nil ->
         {:error, "Imposible update email"}
       true ->
-        {:error, "Unknown error, call Hangman Team Support"}
+        {:error, "No params received"}
     end
   end
 
