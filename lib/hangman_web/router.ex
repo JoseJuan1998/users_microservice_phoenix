@@ -22,7 +22,9 @@ defmodule HangmanWeb.Router do
     get "/users", UserController, :get_users
     post "/users", UserController, :create_user
     put "/users/:id", UserController, :update_user
+    put "/users", UserController, :update_user
     delete "/users/:id", UserController, :delete_user
+    delete "/users", UserController, :delete_user
 
     options "/login", OptionsController, :options
     options "/logout", OptionsController, :options

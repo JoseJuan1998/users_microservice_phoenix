@@ -9,13 +9,26 @@
         "summary": "Update a user",
         "responses": {
           "205": {
-            "description": "Success"
+            "schema": {
+              "$ref": "#/definitions/UpdateUserResponse"
+            },
+            "description": "Updated"
           }
         },
         "produces": [
           "application/json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/UpdateUserRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The user details"
+          }
+        ],
         "operationId": "HangmanWeb.UserController.update_user",
         "description": "Update the user information",
         "deprecated": false
@@ -27,7 +40,10 @@
         "summary": "Specific User",
         "responses": {
           "200": {
-            "description": "Success"
+            "schema": {
+              "$ref": "#/definitions/ShowUserResponse"
+            },
+            "description": "User created OK"
           }
         },
         "produces": [
@@ -65,13 +81,26 @@
         "summary": "Add a new user",
         "responses": {
           "201": {
+            "schema": {
+              "$ref": "#/definitions/CreateUserResponse"
+            },
             "description": "Created"
           }
         },
         "produces": [
           "application/json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/CreateUserRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The user details"
+          }
+        ],
         "operationId": "HangmanWeb.UserController.create_user",
         "description": "Create a new user in the database",
         "deprecated": false
@@ -83,6 +112,9 @@
         "summary": "All Users",
         "responses": {
           "200": {
+            "schema": {
+              "$ref": "#/definitions/ShowUsersResponse"
+            },
             "description": "Success"
           }
         },
@@ -141,5 +173,236 @@
     "title": "Users API"
   },
   "host": "localhost:4000",
-  "definitions": {}
+  "definitions": {
+    "User": {
+      "type": "object",
+      "title": "User",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Update timestamp"
+        },
+        "name": {
+          "type": "string",
+          "description": "User name"
+        },
+        "inserted_at": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Creation timestamp"
+        },
+        "id": {
+          "type": "integer",
+          "description": "User ID"
+        },
+        "credential": {
+          "$ref": "#/definitions/Credential"
+        }
+      },
+      "description": "Managers for the words list"
+    },
+    "UpdateUserResponse": {
+      "type": "object",
+      "title": "ShowUserResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "user": {
+          "name": "Juan",
+          "email": "juan@cordage.io",
+          "admin": true,
+          "active": false
+        }
+      },
+      "description": "Response schema of a single user"
+    },
+    "UpdateUserRequest": {
+      "type": "object",
+      "title": "ShowUserResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "name": "Juan",
+        "credential": {
+          "password_confirmation": "Qwerty2021",
+          "password": "Qwerty2021",
+          "admin": true,
+          "active": false
+        }
+      },
+      "description": "Response schema of a single user"
+    },
+    "ShowUsersResponse": {
+      "type": "object",
+      "title": "CreateUserResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "user": {
+          "name": "Juan",
+          "email": "juan@cordage.io",
+          "admin": true,
+          "active": false
+        }
+      },
+      "description": "Response schema of the user created"
+    },
+    "ShowUserResponse": {
+      "type": "object",
+      "title": "ShowUserResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "user": {
+          "name": "Juan",
+          "email": "juan@cordage.io",
+          "admin": true,
+          "active": false
+        }
+      },
+      "description": "Response schema of a single user"
+    },
+    "ShowUserRequest": {
+      "type": "object",
+      "title": "ShowUserRequest",
+      "properties": {
+        "id": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "description": "Response schema of the user created"
+    },
+    "Credential": {
+      "type": "object",
+      "title": "Credential",
+      "required": [
+        "active",
+        "admin",
+        "email"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Update timestamp"
+        },
+        "password_hash": {
+          "type": "string"
+        },
+        "password_confirmation": {
+          "type": "string",
+          "description": "Virtual Password Confirmation"
+        },
+        "password": {
+          "type": "string",
+          "description": "Virtual Password"
+        },
+        "inserted_at": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Creation timestamp"
+        },
+        "id": {
+          "type": "integer",
+          "description": "Credential ID"
+        },
+        "email": {
+          "type": "string",
+          "description": "User Email"
+        },
+        "admin": {
+          "type": "boolean",
+          "description": "User is a Super Manenger"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "User has verified email"
+        }
+      },
+      "description": "Managers credential"
+    },
+    "CreateUserResponse": {
+      "type": "object",
+      "title": "CreateUserResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "user": {
+          "name": "Juan",
+          "email": "juan@cordage.io",
+          "admin": true,
+          "active": false
+        }
+      },
+      "description": "Response schema of the user created"
+    },
+    "CreateUserRequest": {
+      "type": "object",
+      "title": "CreateUserRequest",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "name": "Juan",
+        "credential": {
+          "email": "juan@cordage.io",
+          "admin": true,
+          "active": false
+        }
+      },
+      "description": "POST body for creating a user"
+    }
+  }
 }

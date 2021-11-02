@@ -25,7 +25,7 @@ defmodule Hangman.UserTest do
   end
 
   test "search user successfully", %{user: user} do
-    user = Accounts.get_user!(user.id)
+    user = Accounts.get_user(user.id)
     assert user.name == "Pedro"
   end
 
