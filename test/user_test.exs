@@ -16,7 +16,6 @@ defmodule Hangman.UserTest do
     changeset = Accounts.change_user(user, %{name: "Zuli", credential: %{email: "zuli@cordage.io", admin: false, active: false}})
     assert changeset.valid? == true
     {:ok, user} = Accounts.create_user(%{name: "Zuli", credential: %{email: "zuli@cordage.io", admin: false, active: false}})
-    IO.inspect(user)
   end
 
   test "create user unsuccessfully" do
@@ -28,6 +27,11 @@ defmodule Hangman.UserTest do
   test "search user successfully", %{user: user} do
     user = Accounts.get_user(user.id)
     assert user != nil
+  end
+
+  test "search user unsuccessfully", %{user: user} do
+    user = Accounts.get_user((user.id+1))
+    assert user == nil
   end
 
   test "search all users successfully" do
@@ -54,9 +58,21 @@ defmodule Hangman.UserTest do
   end
 
   test "update user password successfully", %{user: user} do
-    updated_user = Accounts.update_user(user, %{"credential" => %{"id" => user.id, "password" => "Qwerty2021", "password_confirmation" => "Qwerty2021"}})
+    updated_user = Accounts.update_user(user, %{"credential" => %{"id" => user.id, "password" => "Qwerty2021", "password_confirmation" => "Qwerty2021", "admin" => false, "active" => false}})
     {:ok, user2} = updated_user
     assert user2.credential.password_hash != nil
+  end
+
+  test "update user active successfully", %{user: user} do
+    updated_user = Accounts.update_user(user, %{"credential" => %{"id" => user.id, "active" => true}})
+    {:ok, user2} = updated_user
+    assert user2.credential.active != user.credential.active
+  end
+
+  test "update user admin successfully", %{user: user} do
+    updated_user = Accounts.update_user(user, %{"credential" => %{"id" => user.id, "admin" => true}})
+    {:ok, user2} = updated_user
+    assert user2.credential.admin != user.credential.admin
   end
 
   test "update user unsuccessfully because no params", %{user: user} do
