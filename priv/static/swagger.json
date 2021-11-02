@@ -155,13 +155,26 @@
         "summary": "Create session",
         "responses": {
           "200": {
+            "schema": {
+              "$ref": "#/definitions/CreateSessionResponse"
+            },
             "description": "Success"
           }
         },
         "produces": [
           "application/json"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/CreateSessionRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The user details"
+          }
+        ],
         "operationId": "HangmanWeb.SessionController.create_session",
         "description": "Return the id of the user if it's found and the password is valid and create a session",
         "deprecated": false
@@ -401,6 +414,41 @@
           "admin": true,
           "active": false
         }
+      },
+      "description": "POST body for creating a user"
+    },
+    "CreateSessionResponse": {
+      "type": "object",
+      "title": "CreateSessionResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "user_id": 1
+      },
+      "description": "Response and id"
+    },
+    "CreateSessionRequest": {
+      "type": "object",
+      "title": "CreateUserRequest",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "password": "Qwerty2021",
+        "email": "juan@cordage.io"
       },
       "description": "POST body for creating a user"
     }
