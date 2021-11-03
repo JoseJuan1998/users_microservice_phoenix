@@ -154,10 +154,20 @@ defmodule Hangman.Accounts do
     cred = Repo.get_by(Credential, email: email) |> Repo.preload(:user)
 
     cond do
-      cred && Argon2.verify_pass(given_password, cred.password_hash) ->
-        {:ok, cred.user}
+      cred && cred.active ->
+        cond do
+          cred.password_hash != nil ->
+            cond do
+              Argon2.verify_pass(given_password, cred.password_hash) ->
+                {:ok, cred.user}
+              true ->
+                {:error, :unauthorized}
+            end
+          true ->
+            {:error, :not_password}
+        end
       cred ->
-        {:error, :unauthorized}
+        {:error, :not_active}
       true ->
         {:error, :not_found}
     end
