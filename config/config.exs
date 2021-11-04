@@ -33,7 +33,21 @@ config :hangman, HangmanWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :hangman, Hangman.Mailer, adapter: Swoosh.Adapters.Local
+
+# config :hangman, Hangman.Mailer, adapter: Swoosh.Adapters.Local
+config :hangman, Hangman.Email,
+adapter: Bamboo.SMTPAdapter,
+server: "smtp.sendgrid.net",
+hostname: "smtp.sendgrid.net",
+port: 587,
+username: "apikey",
+password: "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",
+tls: :if_available,
+allowed_tls_versions: [:"tlsv1", :"tlsv1.1", :"tlsv1.2"],
+ssl: false,
+retries: 1,
+no_mx_lookups: false,
+auth: :if_available
 
 # Swoosh API client is needed for adapters other than SMTP.
 config :swoosh, :api_client, false

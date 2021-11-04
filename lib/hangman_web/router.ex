@@ -43,6 +43,10 @@ defmodule HangmanWeb.Router do
     }
   end
 
+  # if Mix.env == :dev do
+  #   forward "/sent_emails", Bamboo.EmailPreviewPlug
+  # end
+
   scope "/api/swagger" do
     forward "/", PhoenixSwagger.Plug.SwaggerUI,
       otp_app: :hangman,

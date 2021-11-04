@@ -51,6 +51,7 @@ defmodule Hangman.MixProject do
       {:poison, "~> 3.0"},
       {:bamboo, "~> 2.2"},
       {:bamboo_smtp, "~> 4.1"},
+      {:bamboo_phoenix, "~> 1.0.0"},
       {:mime, "~> 1.6"},
       {:argon2_elixir, "~> 2.4"},
       {:excoveralls, "~> 0.10", only: :test},

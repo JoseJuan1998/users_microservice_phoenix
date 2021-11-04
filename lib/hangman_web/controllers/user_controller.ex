@@ -3,6 +3,7 @@ defmodule HangmanWeb.UserController do
   use HangmanWeb, :controller
   alias Hangman.Accounts
   alias Hangman.Accounts.User
+  alias Hangman.{Mailer, Email}
   import Plug.Conn.Status, only: [code: 1]
   use PhoenixSwagger
 
@@ -198,10 +199,15 @@ defmodule HangmanWeb.UserController do
     end
     case changeset.valid? do
       true ->
-        {:ok, user} = Accounts.create_user(user_params)
-        conn
-        |> put_status(201)
-        |> render("user.json", %{user: user})
+        case Accounts.create_user(user_params) do
+          {:ok, user} ->
+            Email.user_added_email(user)
+            conn
+            |> put_status(201)
+            |> render("user.json", %{user: user})
+          {:error, error} ->
+            {:error, error}
+        end
       false ->
         {:error, changeset}
     end

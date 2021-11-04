@@ -56,10 +56,16 @@ defmodule Hangman.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    %User{}
-    |> User.changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
-    |> Repo.insert()
+    cred = Repo.get_by(Credential, email: attrs["credential"]["email"]) |> Repo.preload(:user)
+    cond do
+      cred ->
+        {:error, "This email is already used"}
+      true ->
+        %User{}
+        |> User.changeset(attrs)
+        |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
+        |> Repo.insert()
+    end
   end
 
   @doc """

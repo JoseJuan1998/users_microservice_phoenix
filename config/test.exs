@@ -21,7 +21,7 @@ config :hangman, HangmanWeb.Endpoint,
   server: false
 
 # In test we don't send emails.
-config :hangman, Hangman.Mailer, adapter: Swoosh.Adapters.Test
+# config :hangman, Hangman.Email, adapter: Bamboo.TestAdapter
 
 # Print only warnings and errors during test
 config :logger, level: :warn
