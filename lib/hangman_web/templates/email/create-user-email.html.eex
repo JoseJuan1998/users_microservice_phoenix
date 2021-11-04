@@ -1,13 +1,54 @@
-<style>
-    .content {
-        font-size: 30px;
-        line-height: 40px;
-    }
-</style>
-
-<div class="content">
-    <h1>Hello <%= @user.name%>!</h1>
-    <h2>Welcome to Hangman Game Managers Team!</h2>
-    <h3>The final step to be part of us, is to activate your account, click the next button to start</h3>
-    <button>Activate account</button>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <title>Activate account</title>
+        <style>
+            body{
+                font-family: "Gill Sans Extrabold", Helvetica, sans-serif;
+                max-width: 800px;
+            }
+            .container {
+                padding: 0 20px;
+            }
+            .content {
+                font-size: 14px;
+                line-height: 40px;
+                margin: auto;
+                max-width: 500px;
+                color: black;
+            }
+            .nav {
+                background: red;
+                display: flex;
+                height:50px;
+                align-items: center;
+                padding: 0 10px;
+                color: white;
+            }
+            .btn-container {
+                text-align: center;
+            }
+            .btn {
+                border: none;
+                background: red;
+                padding: 15px;
+                font-size: 20px;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="nav"><h3>Hangman Team</h3></div>
+        <div class="container">
+            <div class="content">
+                <h1>Hello <%= @user.name %>!</h1>
+                <h2>Welcome to Hangman Game Managers Team!</h2>
+                <h3>The final step to be part of us, is to activate your account, click the next button to verify <%= @user.credential.email %> email</h3>
+                <div class = "btn-container">
+                    <a><button class="btn">Activate account</button></a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
