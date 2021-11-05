@@ -19,7 +19,7 @@
                 color: black;
             }
             .nav {
-                background: red;
+                background: #ef5350;
                 display: flex;
                 height:50px;
                 align-items: center;
@@ -31,10 +31,15 @@
             }
             .btn {
                 border: none;
-                background: red;
+                background: #ef5350;
                 padding: 15px;
                 font-size: 20px;
                 color: white;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            a {
+                cursor: pointer;
             }
         </style>
     </head>
@@ -46,7 +51,7 @@
                 <h2>Welcome to Hangman Game Managers Team!</h2>
                 <h3>The final step to be part of us, is to activate your account, click the next button to verify <%= @user.credential.email %> email</h3>
                 <div class = "btn-container">
-                    <a><button class="btn">Activate account</button></a>
+                    <a href="https://www.google.com"><button class="btn">Activate account</button></a>
                 </div>
             </div>
         </div>
