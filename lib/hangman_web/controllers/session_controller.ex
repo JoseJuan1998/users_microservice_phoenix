@@ -56,7 +56,9 @@ defmodule HangmanWeb.SessionController do
           description("Response and id")
           property(:users, Schema.array(:User), "The users details")
           example(%{
-              user_id: 1
+            token_auth: "SFMyNTY.g2gDYQduBgA01y8LfQFiAAFRgA.5IuDTyU07BU1DdTfVLPv5aDydsg7tdRNMhC33cL__NA",
+            token_refresh: "SFMyNTY.g2gDYQduBgA01y8LfQFiAAFRgA.9mGWauIJ7RdO86yfQ_m9wvXefmb5kEy8yiI57yOOz5o",
+            user_id: 1
           })
           end
     }
