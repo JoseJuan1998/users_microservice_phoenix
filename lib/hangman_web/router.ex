@@ -54,7 +54,7 @@ defmodule HangmanWeb.Router do
   #   forward "/sent_emails", Bamboo.EmailPreviewPlug
   # end
 
-  scope "/api/swagger" do
+  scope "/manager/doc" do
     forward "/", PhoenixSwagger.Plug.SwaggerUI,
       otp_app: :hangman,
       swagger_file: "swagger.json"
