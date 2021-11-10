@@ -495,7 +495,9 @@
         }
       },
       "example": {
-        "user_id": 1
+        "user_id": 1,
+        "token_refresh": "SFMyNTY.g2gDYQduBgA01y8LfQFiAAFRgA.9mGWauIJ7RdO86yfQ_m9wvXefmb5kEy8yiI57yOOz5o",
+        "token_auth": "SFMyNTY.g2gDYQduBgA01y8LfQFiAAFRgA.5IuDTyU07BU1DdTfVLPv5aDydsg7tdRNMhC33cL__NA"
       },
       "description": "Response and id"
     },
