@@ -3,11 +3,14 @@ defmodule HangmanWeb.UserController do
   use HangmanWeb, :controller
   alias Hangman.Accounts
   alias Hangman.Accounts.User
-  alias Hangman.{Mailer, Email}
+  alias Hangman.Email
+  alias Hangman.Repo
   import Plug.Conn.Status, only: [code: 1]
   use PhoenixSwagger
 
   action_fallback HangmanWeb.UserErrorController
+
+  # plug :authenticate_api_user when action in [:get_users, :get_user, :create_user, :update_user, :delete_user]
 
   def swagger_definitions do
     %{
@@ -49,11 +52,7 @@ defmodule HangmanWeb.UserController do
           property(:users, Schema.array(:User), "The users details")
           example(%{
               name: "Juan",
-              credential: %{
-                email: "juan@cordage.io",
-                admin: true,
-                active: false
-              }
+              email: "juan@cordage.io"
           })
         end,
       CreateUserResponse:
@@ -63,9 +62,9 @@ defmodule HangmanWeb.UserController do
           property(:users, Schema.array(:User), "The users details")
           example(%{
             user: %{
+              id: 1,
               name: "Juan",
               email: "juan@cordage.io",
-              admin: true,
               active: false
               }
           })
@@ -77,9 +76,9 @@ defmodule HangmanWeb.UserController do
           property(:users, Schema.array(:User), "The users details")
           example(%{
             user: %{
+              id: 1,
               name: "Juan",
               email: "juan@cordage.io",
-              admin: true,
               active: false
             }
           })
@@ -97,39 +96,57 @@ defmodule HangmanWeb.UserController do
           property(:users, Schema.array(:User), "The users details")
           example(%{
             user: %{
+              id: 1,
               name: "Juan",
               email: "juan@cordage.io",
-              admin: true,
               active: false
               }
           })
         end,
-      UpdateUserRequest:
+      UpdateUserNameRequest:
         swagger_schema do
           title("ShowUserResponse")
           description("Response schema of a single user")
           property(:users, Schema.array(:User), "The users details")
           example(%{
-              name: "Juan",
-              credential: %{
-                admin: true,
-                active: false,
-                password: "Qwerty2021",
-                password_confirmation: "Qwerty2021"
-              }
+              name: "Jose"
           })
         end,
-      UpdateUserResponse:
+      UpdateUserNameResponse:
         swagger_schema do
           title("ShowUserResponse")
           description("Response schema of a single user")
           property(:users, Schema.array(:User), "The users details")
           example(%{
             user: %{
-              name: "Juan",
+              id: 1,
+              name: "Jose",
               email: "juan@cordage.io",
-              admin: true,
               active: false
+              }
+          })
+        end,
+        UpdateUserPasswordRequest:
+        swagger_schema do
+          title("ShowUserResponse")
+          description("Response schema of a single user")
+          property(:users, Schema.array(:User), "The users details")
+          example(%{
+              password: "Qwerty2021",
+              password_confirmation: "Qwerty2021"
+          })
+        end,
+      UpdateUserPasswordResponse:
+        swagger_schema do
+          title("ShowUserResponse")
+          description("Response schema of a single user")
+          property(:users, Schema.array(:User), "The users details")
+          example(%{
+            user: %{
+              id: 1,
+              name: "Jose",
+              email: "juan@cordage.io",
+              active: true
               }
           })
         end
@@ -137,7 +154,7 @@ defmodule HangmanWeb.UserController do
   end
 
   swagger_path :get_users do
-    get("/api/users")
+    get("/manager/users")
     summary("All Users")
     description("Return JSON with all users listed in the database")
     produces("application/json")
@@ -158,7 +175,7 @@ defmodule HangmanWeb.UserController do
   end
 
   swagger_path :get_user do
-    get("/api/users/:id")
+    get("/manager/users/:id")
     summary("Specific User")
     description("Return JSON with an especific user")
     produces("application/json")
@@ -166,19 +183,19 @@ defmodule HangmanWeb.UserController do
     response(200, "User created OK",Schema.ref(:ShowUserResponse))
   end
 
-  def get_user(conn, %{"id" => id}) do
-    case Accounts.get_user(id) do
-      nil ->
-        {:error, "User not found"}
-      user ->
+  def get_user(conn, params) do
+    case Accounts.get_user(params) do
+      %User{} = user->
         conn
         |> put_status(200)
         |> render("user.json", %{user: user})
+      %Ecto.Changeset{} = changeset ->
+        {:error, changeset}
     end
   end
 
   swagger_path :create_user do
-    post("/api/users")
+    post("/manager/users")
     summary("Add a new user")
     description("Create a new user in the database")
     produces("application/json")
@@ -187,21 +204,25 @@ defmodule HangmanWeb.UserController do
     response(201, "Created",Schema.ref(:CreateUserResponse))
   end
 
-  def create_user(conn, user_params) do
+  def create_user(conn, params) do
     user = %User{}
     changeset = cond do
-      user_params["credential"] != nil ->
-        Accounts.change_user(user, user_params)
-      user_params["name"] != nil ->
-        Accounts.change_user(user, %{"name" => user_params["name"],"credential" => %{}})
+      not is_nil(params["name"]) and not is_nil(params["email"]) ->
+        Accounts.change_user(user, %{"name" => params["name"],"credential" => %{ "email" => params["email"]}})
+      not is_nil(params["name"]) ->
+        Accounts.change_user(user, %{"name" => params["name"],"credential" => %{}})
+      not is_nil(params["email"]) ->
+        Accounts.change_user(user, %{"credential" => %{ "email" => params["email"]}})
       true ->
         Accounts.change_user(user, %{"credential" => %{}})
     end
     case changeset.valid? do
       true ->
+        user_params = %{"name" => params["name"],"credential" => %{ "email" => params["email"]}}
         case Accounts.create_user(user_params) do
           {:ok, user} ->
-            Email.user_added_email(user)
+            token = Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", user.id)
+            Email.user_added_email(user, token)
             conn
             |> put_status(201)
             |> render("user.json", %{user: user})
@@ -213,56 +234,51 @@ defmodule HangmanWeb.UserController do
     end
   end
 
-  swagger_path :update_user do
-    put("/api/users/:id")
+  swagger_path :update_name do
+    put("/manager/users/name/:id")
     summary("Update a user")
-    description("Update the user information")
+    description("Update the user name")
     response(code(205), "Success")
     produces("application/json")
     deprecated(false)
-    parameter(:user, :body, Schema.ref(:UpdateUserRequest), "The user details")
-    response(205, "Updated",Schema.ref(:UpdateUserResponse))
+    parameter(:user, :body, Schema.ref(:UpdateUserNameRequest), "The user details")
+    response(205, "Updated",Schema.ref(:UpdateUserNameResponse))
   end
 
-  def update_user(conn, params) do
-
-    user = if params["id"] != nil do
-      Accounts.get_user(params["id"])
-    else
-      nil
+  def update_name(conn, params) do
+    case Accounts.update_name(params) do
+      {:ok, user} ->
+        conn
+        |> put_status(205)
+        |> render("user.json", %{user: user})
+      {:error, %Ecto.Changeset{} = changeset} -> {:error, changeset}
     end
-    case user do
-      nil ->
-        {:error, "User not found"}
-      user ->
-        new_params = cond do
-          params["credential"] != nil && params["name"] != nil ->
-            %{"name" => params["name"], "credential" => Map.put(params["credential"], "id", params["id"])}
-          params["name"] != nil ->
-            %{"name" => params["name"]}
-          params["credential"] != nil ->
-            %{"credential" => Map.put(params["credential"], "id", params["id"])}
-          true ->
-            %{}
-        end
+  end
 
-        case Accounts.update_user(user, new_params) do
-          {:ok, user} ->
-            conn
-            |> put_status(205)
-            |> render("user.json", %{user: user})
-          {:error, %Ecto.Changeset{} = changeset} ->
-            {:error, changeset}
-          {:error, error} ->
-            {:error, error}
-          true ->
-            {:error, "Can't update"}
-        end
+  swagger_path :update_password do
+    put("/manager/users/pass/:id")
+    summary("Update a user")
+    description("Update the user password")
+    response(code(205), "Success")
+    produces("application/json")
+    deprecated(false)
+    parameter(:user, :body, Schema.ref(:UpdateUserPasswordRequest), "The user details")
+    response(205, "Updated",Schema.ref(:UpdateUserPasswordResponse))
+  end
+
+  def update_password(conn, params) do
+    case Accounts.update_password(params) do
+      {:ok, cred} ->
+        user = cred.user |> Repo.preload(:credential)
+        conn
+        |> put_status(205)
+        |> render("user.json", %{user: user})
+      {:error, %Ecto.Changeset{} = changeset} -> {:error, changeset}
     end
   end
 
   swagger_path :delete_user do
-    delete("/api/users/:id")
+    delete("/manager/users/:id")
     summary("Delte a User")
     description("Return JSON with an especific user that was deleted")
     response(code(205), "Success")
@@ -271,23 +287,15 @@ defmodule HangmanWeb.UserController do
   end
 
   def delete_user(conn, params) do
-    user = if params["id"] != nil do
-      Accounts.get_user(params["id"])
-    else
-      nil
-    end
-    case user do
-      nil ->
-        {:error, "User not found"}
-      user ->
-        case Accounts.delete_user(user) do
-          {:ok, user} ->
-            conn
-            |> put_status(205)
-            |> render("user.json", %{user: user})
-          {:error, %Ecto.Changeset{} = changeset} ->
-            {:error, changeset}
-        end
+    case Accounts.delete_user(params) do
+      {:ok, user} ->
+        conn
+        |> put_status(205)
+        |> render("user.json", %{user: user})
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:error, changeset}
+      true ->
+        {:error, "Can't delete user, try later"}
     end
   end
 end

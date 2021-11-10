@@ -1,6 +1,7 @@
 defmodule HangmanWeb.SessionController do
   use HangmanWeb, :controller
   alias Hangman.Accounts
+  alias Hangman.Token
   import Plug.Conn.Status, only: [code: 1]
   use PhoenixSwagger
 
@@ -62,7 +63,7 @@ defmodule HangmanWeb.SessionController do
   end
 
   swagger_path :create_session do
-      post("/api/login")
+      post("/manager/login")
       summary("Create session")
       description("Return the id of the user if it's found and the password is valid and create a session")
       produces("application/json")
@@ -73,14 +74,13 @@ defmodule HangmanWeb.SessionController do
 
   def create_session(conn, params) do
       cond do
-        params["email"] != nil && params["password"] != nil ->
+        not is_nil(params["email"]) && not is_nil(params["password"]) ->
           case Accounts.authenticate_by_email_password(params["email"], params["password"]) do
             {:ok, user} ->
               conn
               |> put_status(200)
-              |> put_session(:user_id, user.id)
-              |> configure_session(renew: true)
-              |> render("session.json", %{user_id: user.id})
+              |> assign(:current_user, user.id)
+              |> render("session.json", %{user_id: user.id, token_auth: Token.auth_sign(user.id), token_refresh: Token.refresh_sign(user.id)})
             {:error, :unauthorized} ->
               {:error, "Wrong password"}
             {:error, :not_found} ->
@@ -98,7 +98,7 @@ defmodule HangmanWeb.SessionController do
   end
 
   swagger_path :delete_session do
-      delete("/api/logout")
+      delete("/manager/logout")
       summary("Delete session")
       description("Delete the session")
       response(code(205), "Session ended")
@@ -109,7 +109,7 @@ defmodule HangmanWeb.SessionController do
   def delete_session(conn, _) do
       conn
       |> put_status(205)
-      |> configure_session(drop: true)
-      |> text("Session ended")
+      |> assign(:current_user, nil)
+      |> redirect(external: "https://www.google.com")
   end
 end

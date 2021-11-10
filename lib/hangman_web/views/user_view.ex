@@ -11,6 +11,7 @@ defmodule HangmanWeb.UserView do
 
   def render("single_user.json", %{user: user}) do
     %{
+      id: user.id,
       name: user.name,
       email: user.credential.email,
       active: user.credential.active

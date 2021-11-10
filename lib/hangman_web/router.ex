@@ -8,21 +8,28 @@ defmodule HangmanWeb.Router do
       "http://localhost:3000"
     ]
     plug :accepts, ["json"]
+    plug HangmanWeb.Authenticate
     plug :fetch_session
   end
 
-  scope "/api", HangmanWeb do
-    pipe_through :api
+  scope "/manager", HangmanWeb do
+    pipe_through [:api]
 
     options "/", OptionsController, :options
-    options "/users", OptionsController, :options
     options "/users/:id", OptionsController, :options
+    options "/users", OptionsController, :options
+    options "/users/pass/:id", OptionsController, :options
+    options "/users/pass", OptionsController, :options
+    options "/users/name/:id", OptionsController, :options
+    options "/users/name", OptionsController, :options
 
     get "/users/:id", UserController, :get_user
     get "/users", UserController, :get_users
     post "/users", UserController, :create_user
-    put "/users/:id", UserController, :update_user
-    put "/users", UserController, :update_user
+    put "/users/name/:id", UserController, :update_name
+    put "/users/name", UserController, :update_name
+    put "/users/pass/:id", UserController, :update_password
+    put "/users/pass", UserController, :update_password
     delete "/users/:id", UserController, :delete_user
     delete "/users", UserController, :delete_user
 

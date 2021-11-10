@@ -4,7 +4,6 @@ defmodule Hangman.Accounts do
   """
 
   import Ecto.Query, warn: false
-  # import Comeonin.Argon2, only: [checkpw: 2, dummy_checkpw: 0]
   alias Hangman.Repo
   alias Hangman.Accounts.Credential
   alias Hangman.Accounts.User
@@ -37,9 +36,9 @@ defmodule Hangman.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user(id) do
-    Repo.get(User, id)
-    |> Repo.preload(:credential)
+  def get_user(attrs \\ %{}) do
+    attrs
+    |> User.found_changeset()
   end
 
 
@@ -56,16 +55,10 @@ defmodule Hangman.Accounts do
 
   """
   def create_user(attrs \\ %{}) do
-    cred = Repo.get_by(Credential, email: attrs["credential"]["email"]) |> Repo.preload(:user)
-    cond do
-      cred ->
-        {:error, "This email is already used"}
-      true ->
-        %User{}
-        |> User.changeset(attrs)
-        |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
-        |> Repo.insert()
-    end
+    %User{}
+    |> User.create_changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.create_changeset/2)
+    |> Repo.insert()
   end
 
   @doc """
@@ -80,28 +73,17 @@ defmodule Hangman.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_user(%User{} = user, attrs \\ %{}) do
 
-    cond do
-      attrs["credential"]["password"] != nil && attrs["credential"]["email"] == nil->
-        user
-        |> User.changeset(attrs)
-        |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.registration_changeset/2)
-        |> Repo.update()
-      (attrs["credential"]["active"] != nil || attrs["credential"]["admin"] != nil) && (attrs["credential"]["email"] == nil) ->
-        user
-        |> User.changeset(attrs)
-        |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
-        |> Repo.update()
-      attrs["credential"] == nil && attrs["name"] != nil->
-        user
-        |> User.changeset(attrs)
-        |> Repo.update()
-      attrs["credential"]["email"] != nil ->
-        {:error, "Imposible update email"}
-      true ->
-        {:error, "No params received"}
-    end
+  def update_name(attrs \\ %{})  do
+    attrs
+    |> User.update_changeset()
+    |> Repo.update()
+  end
+
+  def update_password(attrs \\ %{}) do
+    attrs
+    |> Credential.password_changeset()
+    |> Repo.update()
   end
 
   @doc """
@@ -116,8 +98,10 @@ defmodule Hangman.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_user(%User{} = user) do
-    Repo.delete(user)
+  def delete_user(attrs) do
+    attrs
+    |> User.delete_changeset()
+    |> Repo.delete()
   end
 
   @doc """
@@ -130,15 +114,9 @@ defmodule Hangman.Accounts do
 
   """
   def change_user(%User{} = user, attrs \\ %{}) do
-    cred_changeset =
-      if attrs["credential"]["password"] == nil do
-        &Credential.changeset/2
-      else
-        &Credential.registration_changeset/2
-      end
     user
-    |> User.changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:credential, with: cred_changeset)
+    |> User.create_changeset(attrs)
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.create_changeset/2)
   end
 
   @doc """

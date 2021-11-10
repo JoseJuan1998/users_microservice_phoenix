@@ -4,6 +4,7 @@ defmodule Hangman.UserTest do
   alias Hangman.Accounts.{User, Credentials}
 
   ## MIX_ENV=test mix coveralls
+  ## MIX_ENV=test mix coveralls.html
 
   setup do
     stored_user = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io", admin: false, active: false}})

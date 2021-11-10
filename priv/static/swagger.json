@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "paths": {
-    "/api/users/:id": {
+    "/manager/users/pass/:id": {
       "put": {
         "tags": [
           "User"
@@ -10,7 +10,7 @@
         "responses": {
           "205": {
             "schema": {
-              "$ref": "#/definitions/UpdateUserResponse"
+              "$ref": "#/definitions/UpdateUserPasswordResponse"
             },
             "description": "Updated"
           }
@@ -21,7 +21,7 @@
         "parameters": [
           {
             "schema": {
-              "$ref": "#/definitions/UpdateUserRequest"
+              "$ref": "#/definitions/UpdateUserPasswordRequest"
             },
             "required": false,
             "name": "user",
@@ -29,10 +29,45 @@
             "description": "The user details"
           }
         ],
-        "operationId": "HangmanWeb.UserController.update_user",
-        "description": "Update the user information",
+        "operationId": "HangmanWeb.UserController.update_password",
+        "description": "Update the user password",
         "deprecated": false
-      },
+      }
+    },
+    "/manager/users/name/:id": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update a user",
+        "responses": {
+          "205": {
+            "schema": {
+              "$ref": "#/definitions/UpdateUserNameResponse"
+            },
+            "description": "Updated"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/UpdateUserNameRequest"
+            },
+            "required": false,
+            "name": "user",
+            "in": "body",
+            "description": "The user details"
+          }
+        ],
+        "operationId": "HangmanWeb.UserController.update_name",
+        "description": "Update the user name",
+        "deprecated": false
+      }
+    },
+    "/manager/users/:id": {
       "get": {
         "tags": [
           "User"
@@ -73,7 +108,7 @@
         "deprecated": false
       }
     },
-    "/api/users": {
+    "/manager/users": {
       "post": {
         "tags": [
           "User"
@@ -127,7 +162,7 @@
         "deprecated": false
       }
     },
-    "/api/logout": {
+    "/manager/logout": {
       "delete": {
         "tags": [
           "Session"
@@ -135,7 +170,7 @@
         "summary": "Delete session",
         "responses": {
           "205": {
-            "description": "No Response"
+            "description": "Session ended"
           }
         },
         "produces": [
@@ -147,7 +182,7 @@
         "deprecated": false
       }
     },
-    "/api/login": {
+    "/manager/login": {
       "post": {
         "tags": [
           "Session"
@@ -218,7 +253,7 @@
       },
       "description": "Managers for the words list"
     },
-    "UpdateUserResponse": {
+    "UpdateUserPasswordResponse": {
       "type": "object",
       "title": "ShowUserResponse",
       "properties": {
@@ -232,15 +267,15 @@
       },
       "example": {
         "user": {
-          "name": "Juan",
+          "name": "Jose",
+          "id": 1,
           "email": "juan@cordage.io",
-          "admin": true,
-          "active": false
+          "active": true
         }
       },
       "description": "Response schema of a single user"
     },
-    "UpdateUserRequest": {
+    "UpdateUserPasswordRequest": {
       "type": "object",
       "title": "ShowUserResponse",
       "properties": {
@@ -253,13 +288,47 @@
         }
       },
       "example": {
-        "name": "Juan",
-        "credential": {
-          "password_confirmation": "Qwerty2021",
-          "password": "Qwerty2021",
-          "admin": true,
+        "password_confirmation": "Qwerty2021",
+        "password": "Qwerty2021"
+      },
+      "description": "Response schema of a single user"
+    },
+    "UpdateUserNameResponse": {
+      "type": "object",
+      "title": "ShowUserResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "user": {
+          "name": "Jose",
+          "id": 1,
+          "email": "juan@cordage.io",
           "active": false
         }
+      },
+      "description": "Response schema of a single user"
+    },
+    "UpdateUserNameRequest": {
+      "type": "object",
+      "title": "ShowUserResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "name": "Jose"
       },
       "description": "Response schema of a single user"
     },
@@ -278,8 +347,8 @@
       "example": {
         "user": {
           "name": "Juan",
+          "id": 1,
           "email": "juan@cordage.io",
-          "admin": true,
           "active": false
         }
       },
@@ -300,8 +369,8 @@
       "example": {
         "user": {
           "name": "Juan",
+          "id": 1,
           "email": "juan@cordage.io",
-          "admin": true,
           "active": false
         }
       },
@@ -388,8 +457,8 @@
       "example": {
         "user": {
           "name": "Juan",
+          "id": 1,
           "email": "juan@cordage.io",
-          "admin": true,
           "active": false
         }
       },
@@ -409,11 +478,7 @@
       },
       "example": {
         "name": "Juan",
-        "credential": {
-          "email": "juan@cordage.io",
-          "admin": true,
-          "active": false
-        }
+        "email": "juan@cordage.io"
       },
       "description": "POST body for creating a user"
     },
