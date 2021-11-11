@@ -5,7 +5,8 @@ defmodule HangmanWeb.Router do
     plug CORSPlug,
     send_preflight_response?: false,
     origin: [
-      "http://localhost:3000"
+      "http://localhost:3000",
+      "http://hangmangame1.eastatus.cloudapp.azure.com:3000"
     ]
     plug :accepts, ["json"]
     plug HangmanWeb.Authenticate

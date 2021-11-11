@@ -1,11 +1,12 @@
 defmodule Hangman.Accounts.User do
   use Ecto.Schema
   alias Hangman.Repo
+  alias Hangman.Accounts.Credential
   import Ecto.Changeset
 
   schema "users" do
     field :name, :string
-    has_one :credential, Hangman.Accounts.Credential, on_delete: :delete_all
+    has_one :credential, Credential, on_delete: :delete_all
 
     timestamps()
   end
@@ -30,7 +31,8 @@ defmodule Hangman.Accounts.User do
   def create_changeset(user, attrs) do
     user
     |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.create_changeset/2)
+    |> validate_required([:name, :credential])
   end
 
   def found_changeset(attrs) do

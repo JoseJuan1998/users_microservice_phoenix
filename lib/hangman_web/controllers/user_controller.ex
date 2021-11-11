@@ -205,31 +205,24 @@ defmodule HangmanWeb.UserController do
   end
 
   def create_user(conn, params) do
-    user = %User{}
-    changeset = cond do
+    user_params = cond do
       not is_nil(params["name"]) and not is_nil(params["email"]) ->
-        Accounts.change_user(user, %{"name" => params["name"],"credential" => %{ "email" => params["email"]}})
+        %{"name" => params["name"],"credential" => %{ "email" => params["email"]}}
       not is_nil(params["name"]) ->
-        Accounts.change_user(user, %{"name" => params["name"],"credential" => %{}})
+        %{"name" => params["name"],"credential" => %{}}
       not is_nil(params["email"]) ->
-        Accounts.change_user(user, %{"credential" => %{ "email" => params["email"]}})
+        %{"credential" => %{ "email" => params["email"]}}
       true ->
-        Accounts.change_user(user, %{"credential" => %{}})
+        %{"credential" => %{}}
     end
-    case changeset.valid? do
-      true ->
-        user_params = %{"name" => params["name"],"credential" => %{ "email" => params["email"]}}
-        case Accounts.create_user(user_params) do
-          {:ok, user} ->
-            token = Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", user.id)
-            Email.user_added_email(user, token)
-            conn
-            |> put_status(201)
-            |> render("user.json", %{user: user})
-          {:error, error} ->
-            {:error, error}
-        end
-      false ->
+    case Accounts.create_user(user_params) do
+      {:ok, user} ->
+        token = Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", user.id)
+        Email.user_added_email(user, token)
+        conn
+        |> put_status(201)
+        |> render("user.json", %{user: user})
+      {:error, %Ecto.Changeset{} = changeset} ->
         {:error, changeset}
     end
   end
@@ -294,8 +287,6 @@ defmodule HangmanWeb.UserController do
         |> render("user.json", %{user: user})
       {:error, %Ecto.Changeset{} = changeset} ->
         {:error, changeset}
-      true ->
-        {:error, "Can't delete user, try later"}
     end
   end
 end

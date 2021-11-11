@@ -57,7 +57,6 @@ defmodule Hangman.Accounts do
   def create_user(attrs \\ %{}) do
     %User{}
     |> User.create_changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.create_changeset/2)
     |> Repo.insert()
   end
 
@@ -116,7 +115,6 @@ defmodule Hangman.Accounts do
   def change_user(%User{} = user, attrs \\ %{}) do
     user
     |> User.create_changeset(attrs)
-    |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.create_changeset/2)
   end
 
   @doc """

@@ -18,7 +18,7 @@ defmodule Hangman.Accounts.Credential do
   end
 
   @doc false
-  def get_changeset(attrs) do
+  defp get_changeset(attrs) do
     %__MODULE__{}
     |> cast(attrs, [:id])
     |> validate_required([:id])
