@@ -133,25 +133,30 @@ defmodule Hangman.Accounts do
   """
 
   def authenticate_by_email_password(email, given_password) do
-    cred = Repo.get_by(Credential, email: email) |> Repo.preload(:user)
 
     cond do
-      cred && cred.active ->
+      not is_nil(email) ->
+        cred = Repo.get_by(Credential, email: email) |> Repo.preload(:user)
         cond do
-          cred.password_hash != nil ->
+          cred && cred.active ->
             cond do
-              Argon2.verify_pass(given_password, cred.password_hash) ->
-                {:ok, cred.user}
+              not is_nil(given_password) ->
+                cond do
+                  Argon2.verify_pass(given_password, cred.password_hash) ->
+                    {:ok, cred.user}
+                  true ->
+                    {:error, :unauthorized}
+                end
               true ->
-                {:error, :unauthorized}
+                {:error, :not_password}
             end
+          cred ->
+            {:error, :not_active}
           true ->
-            {:error, :not_password}
+            {:error, :not_found}
         end
-      cred ->
-        {:error, :not_active}
       true ->
-        {:error, :not_found}
+        {:error, :not_email}
     end
   end
 end

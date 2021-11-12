@@ -2,10 +2,7 @@ defmodule Hangman.UserTest do
   use Hangman.DataCase
 
   alias Hangman.Accounts
-  alias Hangman.Accounts.{
-    User,
-    Credential
-  }
+  alias Hangman.Accounts.User
 
   ## MIX_ENV=test mix coveralls
   ## MIX_ENV=test mix coveralls.html
@@ -23,7 +20,6 @@ defmodule Hangman.UserTest do
       user = %User{}
       changeset = Accounts.change_user(user, %{name: "Zuli", credential: %{email: "zuli@cordage.io"}})
       assert changeset.valid? == true
-      {:ok, user} = Accounts.create_user(%{name: "Zuli", credential: %{email: "zuli@cordage.io"}})
     end
 
     test "Error when 'email' already exists" do
@@ -123,12 +119,12 @@ defmodule Hangman.UserTest do
       assert not is_nil(updated_user)
     end
 
-    test "Error when 'id' is wrong", %{user: user} do
+    test "Error when 'id' is wrong" do
       {:error, chg} = Accounts.update_name(%{name: "Juan"})
       assert chg.valid? == false
     end
 
-    test "Error when 'name' is empty", %{user: user} do
+    test "Error when 'name' is empty" do
       {:error, chg} = Accounts.update_name(%{})
       assert chg.valid? == false
     end
@@ -146,7 +142,7 @@ defmodule Hangman.UserTest do
       assert not is_nil(updated_user)
     end
 
-    test "Error when 'id' is empty", %{user: user} do
+    test "Error when 'id' is empty" do
       {:error, chg} = Accounts.update_password(%{password: "Qwerty2021", password_confirmation: "Qwerty2021"})
       assert chg.valid? == false
     end

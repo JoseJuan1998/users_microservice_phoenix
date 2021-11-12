@@ -2,7 +2,6 @@ defmodule HangmanWeb.UserErrorController do
   use HangmanWeb, :controller
 
   def call(conn, {:error, changeset = %Ecto.Changeset{}}) do
-    IO.inspect changeset
     cond do
       changeset.action == :update or changeset.action == :delete->
         errors = changeset.errors
@@ -34,9 +33,9 @@ defmodule HangmanWeb.UserErrorController do
       |> json(%{error: error})
   end
 
-  def call(conn, _) do
-    conn
-      |> put_status(500)
-      |> json(%{error: "Unknown error: please call Hangman Team"})
-  end
+  # def call(conn, _) do
+  #   conn
+  #     |> put_status(500)
+  #     |> json(%{error: "Unknown error: please call Hangman Team"})
+  # end
 end

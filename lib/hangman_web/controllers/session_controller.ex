@@ -75,27 +75,24 @@ defmodule HangmanWeb.SessionController do
   end
 
   def create_session(conn, params) do
-      cond do
-        not is_nil(params["email"]) && not is_nil(params["password"]) ->
-          case Accounts.authenticate_by_email_password(params["email"], params["password"]) do
-            {:ok, user} ->
-              conn
-              |> put_status(200)
-              |> assign(:current_user, user.id)
-              |> render("session.json", %{user_id: user.id, token_auth: Token.auth_sign(user.id), token_refresh: Token.refresh_sign(user.id)})
-            {:error, :unauthorized} ->
-              {:error, "Wrong password"}
-            {:error, :not_found} ->
-              {:error, "User not found"}
-            {:error, :not_active} ->
-              {:error, "Verify your email, check your mailbox"}
-            {:error, :not_password} ->
-              {:error, "Create a password"}
-            true ->
-              {:error, "Unknown error"}
-          end
+      case Accounts.authenticate_by_email_password(params["email"], params["password"]) do
+        {:ok, user} ->
+          conn
+          |> put_status(200)
+          |> assign(:current_user, user.id)
+          |> render("session.json", %{user_id: user.id, token_auth: Token.auth_sign(user.id), token_refresh: Token.refresh_sign(user.id)})
+        {:error, :unauthorized} ->
+          {:error, "Wrong password"}
+        {:error, :not_found} ->
+          {:error, "User not found"}
+        {:error, :not_active} ->
+          {:error, "Verify your email, check your mailbox"}
+        {:error, :not_password} ->
+          {:error, "Password can't be blank"}
+        {:error, :not_email} ->
+          {:error, "Email can't be blank"}
         true ->
-          {:error, "No params received"}
+          {:error, "Unknown error"}
       end
   end
 
