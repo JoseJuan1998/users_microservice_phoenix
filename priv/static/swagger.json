@@ -1,7 +1,67 @@
 {
   "swagger": "2.0",
   "paths": {
-    "/manager/users/pass/:id": {
+    "/manager/users/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Specific User",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/ShowUserResponse"
+            },
+            "description": "User created OK"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "The id of the user"
+          }
+        ],
+        "operationId": "HangmanWeb.UserController.get_user",
+        "description": "Return JSON with an especific user",
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Specific User",
+        "responses": {
+          "205": {
+            "schema": {
+              "$ref": "#/definitions/DeleteUserResponse"
+            },
+            "description": "Deleted"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "The id of the user"
+          }
+        ],
+        "operationId": "HangmanWeb.UserController.delete_user",
+        "description": "Return JSON with an especific user",
+        "deprecated": false
+      }
+    },
+    "/manager/users/pass/{id}": {
       "put": {
         "tags": [
           "User"
@@ -20,11 +80,18 @@
         ],
         "parameters": [
           {
+            "type": "string",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "The id of the user"
+          },
+          {
             "schema": {
               "$ref": "#/definitions/UpdateUserPasswordRequest"
             },
-            "required": false,
-            "name": "user",
+            "required": true,
+            "name": "name",
             "in": "body",
             "description": "The user details"
           }
@@ -34,7 +101,7 @@
         "deprecated": false
       }
     },
-    "/manager/users/name/:id": {
+    "/manager/users/name/{id}": {
       "put": {
         "tags": [
           "User"
@@ -53,58 +120,24 @@
         ],
         "parameters": [
           {
+            "type": "string",
+            "required": true,
+            "name": "id",
+            "in": "path",
+            "description": "The id of the user"
+          },
+          {
             "schema": {
               "$ref": "#/definitions/UpdateUserNameRequest"
             },
-            "required": false,
-            "name": "user",
+            "required": true,
+            "name": "name",
             "in": "body",
             "description": "The user details"
           }
         ],
         "operationId": "HangmanWeb.UserController.update_name",
         "description": "Update the user name",
-        "deprecated": false
-      }
-    },
-    "/manager/users/:id": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Specific User",
-        "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/ShowUserResponse"
-            },
-            "description": "User created OK"
-          }
-        },
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [],
-        "operationId": "HangmanWeb.UserController.get_user",
-        "description": "Return JSON with an especific user",
-        "deprecated": false
-      },
-      "delete": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Delte a User",
-        "responses": {
-          "205": {
-            "description": "Success"
-          }
-        },
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [],
-        "operationId": "HangmanWeb.UserController.delete_user",
-        "description": "Return JSON with an especific user that was deleted",
         "deprecated": false
       }
     },
@@ -130,7 +163,7 @@
             "schema": {
               "$ref": "#/definitions/CreateUserRequest"
             },
-            "required": false,
+            "required": true,
             "name": "user",
             "in": "body",
             "description": "The user details"
@@ -262,7 +295,7 @@
           "items": {
             "$ref": "#/definitions/User"
           },
-          "description": "The users details"
+          "description": "The user updated"
         }
       },
       "example": {
@@ -284,14 +317,14 @@
           "items": {
             "$ref": "#/definitions/User"
           },
-          "description": "The users details"
+          "description": "The user password"
         }
       },
       "example": {
         "password_confirmation": "Qwerty2021",
         "password": "Qwerty2021"
       },
-      "description": "Response schema of a single user"
+      "description": "Request params to update the password of a user"
     },
     "UpdateUserNameResponse": {
       "type": "object",
@@ -302,7 +335,7 @@
           "items": {
             "$ref": "#/definitions/User"
           },
-          "description": "The users details"
+          "description": "The user updated"
         }
       },
       "example": {
@@ -324,13 +357,13 @@
           "items": {
             "$ref": "#/definitions/User"
           },
-          "description": "The users details"
+          "description": "The user name"
         }
       },
       "example": {
         "name": "Jose"
       },
-      "description": "Response schema of a single user"
+      "description": "Reques params to update a name of the user"
     },
     "ShowUsersResponse": {
       "type": "object",
@@ -341,7 +374,7 @@
           "items": {
             "$ref": "#/definitions/User"
           },
-          "description": "The users details"
+          "description": "The list of users"
         }
       },
       "example": {
@@ -363,7 +396,7 @@
           "items": {
             "$ref": "#/definitions/User"
           },
-          "description": "The users details"
+          "description": "The user found"
         }
       },
       "example": {
@@ -379,16 +412,34 @@
     "ShowUserRequest": {
       "type": "object",
       "title": "ShowUserRequest",
+      "description": "Request params to update a user"
+    },
+    "DeleteUserResponse": {
+      "type": "object",
+      "title": "DeleteUserResponse",
       "properties": {
-        "id": {
+        "users": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/User"
           },
-          "description": "The users details"
+          "description": "The user deleted"
         }
       },
-      "description": "Response schema of the user created"
+      "example": {
+        "user": {
+          "name": "Juan",
+          "id": 1,
+          "email": "juan@cordage.io",
+          "active": false
+        }
+      },
+      "description": "Response schema of a single user"
+    },
+    "DeleteUserRequest": {
+      "type": "object",
+      "title": "DeleteUserRequest",
+      "description": "Request params to delete a user"
     },
     "Credential": {
       "type": "object",
@@ -451,7 +502,7 @@
           "items": {
             "$ref": "#/definitions/User"
           },
-          "description": "The users details"
+          "description": "The user created"
         }
       },
       "example": {
@@ -473,7 +524,7 @@
           "items": {
             "$ref": "#/definitions/User"
           },
-          "description": "The users details"
+          "description": "The user name and email"
         }
       },
       "example": {

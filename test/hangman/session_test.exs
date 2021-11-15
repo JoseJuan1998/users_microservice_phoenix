@@ -3,6 +3,11 @@ defmodule Hangman.SessionTest do
 
   alias Hangman.Accounts
 
+  ## MIX_ENV=test mix coveralls
+  ## MIX_ENV=test mix coveralls.html
+
+  # --- Unit Tests -------------------------------------------------------------------------------
+
   describe "[Unit] create_session():" do
     setup do
       {:ok, created_user} = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})

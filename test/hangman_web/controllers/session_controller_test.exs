@@ -29,7 +29,7 @@ defmodule HangmanWeb.SessionControllerTest do
         |> post(Routes.session_path(conn, :create_session, %{email: params["user"]["email"], password: "Qwerty2021"}))
         |> json_response(:ok)
 
-      assert = %{
+      assert %{
         "token_auth" => _auth,
         "token_refresh" => _refresh,
         "user_id" => _id
@@ -43,7 +43,7 @@ defmodule HangmanWeb.SessionControllerTest do
         |> post(Routes.session_path(conn, :create_session, %{password: "Qwerty2021"}))
         |> json_response(400)
 
-      assert = %{
+      assert %{
         "error" => _error
       } = response
     end
@@ -55,7 +55,7 @@ defmodule HangmanWeb.SessionControllerTest do
         |> post(Routes.session_path(conn, :create_session, %{email: "juann@example.com", password: "Qwerty2021"}))
         |> json_response(400)
 
-      assert = %{
+      assert %{
         "error" => _error
       } = response
     end
@@ -67,7 +67,7 @@ defmodule HangmanWeb.SessionControllerTest do
         |> post(Routes.session_path(conn, :create_session, %{email: "juan@example.com"}))
         |> json_response(400)
 
-      assert = %{
+      assert %{
         "error" => _error
       } = response
     end
@@ -79,7 +79,7 @@ defmodule HangmanWeb.SessionControllerTest do
         |> post(Routes.session_path(conn, :create_session, %{email: "juan@example.com", password: "Qwerty2020"}))
         |> json_response(400)
 
-      assert = %{
+      assert %{
         "error" => _error
       } = response
     end
@@ -102,7 +102,7 @@ defmodule HangmanWeb.SessionControllerTest do
         |> post(Routes.session_path(conn, :create_session, %{email: params["user"]["email"], password: "Qwerty2021"}))
         |> json_response(400)
 
-      assert = %{
+      assert %{
         "error" => _error
       } = response
     end
@@ -116,7 +116,7 @@ defmodule HangmanWeb.SessionControllerTest do
         |> delete(Routes.session_path(conn, :delete_session))
         |> html_response(205)
 
-        assert = "<html><body>You are being <a href=\"https://www.google.com\">redirected</a>.</body></html>" = response
+        assert "<html><body>You are being <a href=\"https://www.google.com\">redirected</a>.</body></html>" == response
     end
   end
 

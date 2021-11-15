@@ -11,7 +11,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     setup do
       conn = build_conn()
-      response = conn
+      conn
       |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
       |> json_response(201)
     end
@@ -87,7 +87,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "id" => _error
+        "id" => _id
         } = response
     end
   end
@@ -120,7 +120,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "name" => _error
+        "name" => _name
         } = response
     end
 
@@ -132,7 +132,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "email" => _error
+        "email" => _email
         } = response
     end
 
@@ -144,7 +144,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "email" => _error
+        "email" => _email
         } = response
     end
 
@@ -156,8 +156,8 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "email" => _error,
-        "name" => _error
+        "email" => _email,
+        "name" => _name
         } = response
     end
   end
@@ -198,8 +198,8 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "id" => _error,
-        "name" => _error
+        "id" => _id,
+        "name" => _name
         } = response
     end
 
@@ -212,7 +212,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "id" => _error
+        "id" => _id
         } = response
     end
 
@@ -225,7 +225,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "id" => _error
+        "id" => _id
         } = response
     end
 
@@ -256,7 +256,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "id" => _error
+        "id" => _id
         } = response
     end
 
@@ -269,7 +269,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "id" => _error
+        "id" => _id
         } = response
     end
 
@@ -282,8 +282,8 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "password" => _error,
-        "password_confirmation" => _match
+        "password" => _password,
+        "password_confirmation" => _password_confirmation
       } = response
     end
 
@@ -296,7 +296,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "password_confirmation" => _error
+        "password_confirmation" => _password_confirmation
       } = response
     end
 
@@ -309,8 +309,8 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "password" => _error,
-        "password_confirmation" => _match
+        "password" => _password,
+        "password_confirmation" => _password_confirmation
       } = response
     end
 
@@ -323,7 +323,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "password_confirmation" => _match
+        "password_confirmation" => _password_confirmation
       } = response
     end
   end
@@ -362,7 +362,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "id" => _error
+        "id" => _id
        } = response
     end
 
@@ -374,7 +374,7 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "id" => _error
+        "id" => _id
         } = response
     end
   end
