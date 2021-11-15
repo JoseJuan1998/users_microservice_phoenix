@@ -24,8 +24,8 @@ defmodule Hangman.Token do
     Phoenix.Token.verify(HangmanWeb.Endpoint, "auth", token, max_age: 3600)
   end
 
-  @spec verify_refresh(String.t()) :: {:ok, any()} | {:error, :unauthenticated}
-  def verify_refresh(token) do
-    Phoenix.Token.verify(HangmanWeb.Endpoint, "refresh", token, max_age: 86400)
-  end
+  # @spec verify_refresh(String.t()) :: {:ok, any()} | {:error, :unauthenticated}
+  # def verify_refresh(token) do
+  #   Phoenix.Token.verify(HangmanWeb.Endpoint, "refresh", token, max_age: 86400)
+  # end
 end

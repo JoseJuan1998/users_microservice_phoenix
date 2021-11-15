@@ -12,6 +12,7 @@ defmodule HangmanWeb.UserControllerTest do
     setup do
       conn = build_conn()
       conn
+      |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
       |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
       |> json_response(201)
     end
@@ -20,6 +21,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> get(Routes.user_path(conn, :get_users))
         |> json_response(:ok)
 
@@ -40,6 +42,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> get(Routes.user_path(conn, :get_users))
         |> json_response(400)
 
@@ -54,6 +57,7 @@ defmodule HangmanWeb.UserControllerTest do
     setup do
       conn = build_conn()
       params = conn
+      |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
       |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
       |> json_response(201)
       {:ok, params: params}
@@ -63,6 +67,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> get(Routes.user_path(conn, :get_user, params["user"]["id"]))
         |> json_response(:ok)
 
@@ -83,6 +88,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> get(Routes.user_path(conn, :get_user, 0))
         |> json_response(400)
 
@@ -99,6 +105,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
         |> json_response(201)
 
@@ -116,6 +123,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> post(Routes.user_path(conn, :create_user, %{email: "juan@example.com"}))
         |> json_response(400)
 
@@ -128,6 +136,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> post(Routes.user_path(conn, :create_user, %{name: "Juan"}))
         |> json_response(400)
 
@@ -140,6 +149,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juanexample.com"}))
         |> json_response(400)
 
@@ -152,6 +162,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> post(Routes.user_path(conn, :create_user, %{}))
         |> json_response(400)
 
@@ -166,6 +177,7 @@ defmodule HangmanWeb.UserControllerTest do
     setup do
       conn = build_conn()
       params = conn
+      |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
       |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
       |> json_response(201)
       {:ok, params: params}
@@ -176,6 +188,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_name, params["user"]["id"], %{name: "Juan"}))
         |> json_response(205)
 
@@ -194,6 +207,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_name))
         |> json_response(400)
 
@@ -208,6 +222,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_name, :id, %{name: "Juan"}))
         |> json_response(400)
 
@@ -221,6 +236,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_name, 0, %{name: "Juan"}))
         |> json_response(400)
 
@@ -234,6 +250,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "Qwerty2021", password_confirmation: "Qwerty2021"}))
         |> json_response(205)
 
@@ -252,6 +269,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_password, :id, %{password: "Qwerty", password_confirmation: "Qwerty2021"}))
         |> json_response(400)
 
@@ -265,6 +283,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_password, 0, %{password: "Qwerty", password_confirmation: "Qwerty2021"}))
         |> json_response(400)
 
@@ -278,6 +297,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password_confirmation: "Qwerty2021"}))
         |> json_response(400)
 
@@ -292,6 +312,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "Qwerty2021"}))
         |> json_response(400)
 
@@ -305,6 +326,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "qwerty2021", password_confirmation: "Qwerty2021"}))
         |> json_response(400)
 
@@ -319,6 +341,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "Qwerty2021", password_confirmation: "qwerty2021"}))
         |> json_response(400)
 
@@ -332,6 +355,7 @@ defmodule HangmanWeb.UserControllerTest do
     setup do
       conn = build_conn()
       params = conn
+      |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
       |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
       |> json_response(201)
       {:ok, params: params}
@@ -341,6 +365,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> delete(Routes.user_path(conn, :delete_user, params["user"]["id"]))
         |> json_response(205)
 
@@ -358,6 +383,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> delete(Routes.user_path(conn, :delete_user, :id))
         |> json_response(400)
 
@@ -370,6 +396,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
+        |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
         |> delete(Routes.user_path(conn, :delete_user, 0))
         |> json_response(400)
 
