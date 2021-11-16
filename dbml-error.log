@@ -1,0 +1,81 @@
+2021-11-16T20:32:28.602Z
+SyntaxError: You have a syntax error at "users.sql" line 1 column 8. Expected "GLOBAL", "INDEX", "LOCAL", "SCHEMA", "SEQUENCE", "TABLE", "TEMP", "TEMPORARY", "TYPE", "UNIQUE", "UNLOGGED", or "VIEW" but "D" found.
+    at /home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:55:13
+    at Array.forEach (<anonymous>)
+    at generate (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:48:14)
+    at importHandler (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/import.js:38:27)
+    at Object.sql2dbml (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/index.js:38:23)
+    at Object.<anonymous> (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/bin/sql2dbml.js:4:19)
+    at Module._compile (node:internal/modules/cjs/loader:1101:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1153:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+
+ROOT_ERROR:
+SyntaxError: Expected "GLOBAL", "INDEX", "LOCAL", "SCHEMA", "SEQUENCE", "TABLE", "TEMP", "TEMPORARY", "TYPE", "UNIQUE", "UNLOGGED", or "VIEW" but "D" found.
+    at peg$buildStructuredError (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/postgresParser.js:34:6718)
+    at Object.peg$parse [as parse] (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/postgresParser.js:42:339)
+    at Function.parsePostgresToJSON (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/Parser.js:49:41)
+    at Function.parse (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/Parser.js:77:32)
+    at Object._import [as import] (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/import/index.js:15:37)
+    at /home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/import.js:38:68
+    at /home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:52:23
+    at Array.forEach (<anonymous>)
+    at generate (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:48:14)
+    at importHandler (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/import.js:38:27)
+{"start":{"offset":7,"line":1,"column":8},"end":{"offset":8,"line":1,"column":9}}
+
+2021-11-16T20:33:45.180Z
+SyntaxError: You have a syntax error at "users.sql" line 13 column 51. Expected ")", ",", "CHECK", "CONSTRAINT", "DEFAULT", "GENERATED", "NOT", "NULL", "PRIMARY", "REFERENCES", "UNIQUE", or letter, number or underscore but "." found.
+    at /home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:55:13
+    at Array.forEach (<anonymous>)
+    at generate (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:48:14)
+    at importHandler (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/import.js:38:27)
+    at Object.sql2dbml (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/index.js:38:23)
+    at Object.<anonymous> (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/bin/sql2dbml.js:4:19)
+    at Module._compile (node:internal/modules/cjs/loader:1101:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1153:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+
+ROOT_ERROR:
+SyntaxError: Expected ")", ",", "CHECK", "CONSTRAINT", "DEFAULT", "GENERATED", "NOT", "NULL", "PRIMARY", "REFERENCES", "UNIQUE", or letter, number or underscore but "." found.
+    at peg$buildStructuredError (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/postgresParser.js:34:6718)
+    at Object.peg$parse [as parse] (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/postgresParser.js:42:339)
+    at Function.parsePostgresToJSON (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/Parser.js:49:41)
+    at Function.parse (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/Parser.js:77:32)
+    at Object._import [as import] (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/import/index.js:15:37)
+    at /home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/import.js:38:68
+    at /home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:52:23
+    at Array.forEach (<anonymous>)
+    at generate (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:48:14)
+    at importHandler (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/import.js:38:27)
+{"start":{"offset":353,"line":13,"column":51},"end":{"offset":354,"line":13,"column":52}}
+
+2021-11-16T20:34:27.484Z
+SyntaxError: You have a syntax error at "users.sql" line 13 column 51. Expected ")", ",", "CHECK", "CONSTRAINT", "DEFAULT", "GENERATED", "NOT", "NULL", "PRIMARY", "REFERENCES", "UNIQUE", or letter, number or underscore but "(" found.
+    at /home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:55:13
+    at Array.forEach (<anonymous>)
+    at generate (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:48:14)
+    at importHandler (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/import.js:38:27)
+    at Object.sql2dbml (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/index.js:38:23)
+    at Object.<anonymous> (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/bin/sql2dbml.js:4:19)
+    at Module._compile (node:internal/modules/cjs/loader:1101:14)
+    at Object.Module._extensions..js (node:internal/modules/cjs/loader:1153:10)
+    at Module.load (node:internal/modules/cjs/loader:981:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+
+ROOT_ERROR:
+SyntaxError: Expected ")", ",", "CHECK", "CONSTRAINT", "DEFAULT", "GENERATED", "NOT", "NULL", "PRIMARY", "REFERENCES", "UNIQUE", or letter, number or underscore but "(" found.
+    at peg$buildStructuredError (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/postgresParser.js:34:6718)
+    at Object.peg$parse [as parse] (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/postgresParser.js:42:339)
+    at Function.parsePostgresToJSON (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/Parser.js:49:41)
+    at Function.parse (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/parse/Parser.js:77:32)
+    at Object._import [as import] (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/node_modules/@dbml/core/lib/import/index.js:15:37)
+    at /home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/import.js:38:68
+    at /home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:52:23
+    at Array.forEach (<anonymous>)
+    at generate (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/utils.js:48:14)
+    at importHandler (/home/juan/.nvm/versions/node/v16.13.0/lib/node_modules/@dbml/cli/lib/cli/import.js:38:27)
+{"start":{"offset":353,"line":13,"column":51},"end":{"offset":354,"line":13,"column":52}}
+

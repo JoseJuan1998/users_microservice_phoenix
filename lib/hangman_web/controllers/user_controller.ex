@@ -10,7 +10,7 @@ defmodule HangmanWeb.UserController do
 
   action_fallback HangmanWeb.UserErrorController
 
-  # plug :authenticate_api_user when action in [:get_users, :get_user, :create_user, :update_name, :update_password, :delete_user]
+  plug :authenticate_api_user when action in [:get_users, :get_user, :create_user, :update_name, :update_password, :delete_user]
 
   def swagger_definitions do
     %{
@@ -175,6 +175,9 @@ defmodule HangmanWeb.UserController do
     get("/manager/users")
     summary("All Users")
     description("Return JSON with all users listed in the database")
+    parameters do
+      authorization :header, :string, "Token to access", required: true
+    end
     produces("application/json")
     deprecated(false)
     response(200, "Success",Schema.ref(:ShowUsersResponse))
@@ -197,6 +200,7 @@ defmodule HangmanWeb.UserController do
     summary("Specific User")
     description("Return JSON with an especific user")
     parameters do
+      authorization :header, :string, "Token to access", required: true
       id :path, :string, "The id of the user", required: true
     end
     produces("application/json")
@@ -222,7 +226,8 @@ defmodule HangmanWeb.UserController do
     produces("application/json")
     deprecated(false)
     parameters do
-      user :body, Schema.ref(:CreateUserRequest), "The user details", required: true
+      authorization :header, :string, "Token to access", required: true
+      user :body, Schema.ref(:CreateUserRequest), "The user data", required: true
     end
     response(201, "Created",Schema.ref(:CreateUserResponse))
   end
@@ -258,8 +263,9 @@ defmodule HangmanWeb.UserController do
     produces("application/json")
     deprecated(false)
     parameters do
+      authorization :header, :string, "Token to access", required: true
       id :path, :string, "The id of the user", required: true
-      name :body, Schema.ref(:UpdateUserNameRequest), "The user details", required: true
+      name :body, Schema.ref(:UpdateUserNameRequest), "The user name", required: true
     end
     response(205, "Updated",Schema.ref(:UpdateUserNameResponse))
   end
@@ -282,8 +288,9 @@ defmodule HangmanWeb.UserController do
     produces("application/json")
     deprecated(false)
     parameters do
+      authorization :header, :string, "Token to access", required: true
       id :path, :string, "The id of the user", required: true
-      name :body, Schema.ref(:UpdateUserPasswordRequest), "The user details", required: true
+      password :body, Schema.ref(:UpdateUserPasswordRequest), "The user password", required: true
     end
     response(205, "Updated",Schema.ref(:UpdateUserPasswordResponse))
   end
@@ -304,6 +311,7 @@ defmodule HangmanWeb.UserController do
     summary("Specific User")
     description("Return JSON with an especific user")
     parameters do
+      authorization :header, :string, "Token to access", required: true
       id :path, :string, "The id of the user", required: true
     end
     produces("application/json")

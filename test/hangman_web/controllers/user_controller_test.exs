@@ -7,6 +7,16 @@ defmodule HangmanWeb.UserControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
+  describe "[ANY] not headder token" do
+    test "Error when 'token' does not exist or it is invalid or expired" do
+      conn = build_conn()
+      response =
+        conn
+        |> get(Routes.user_path(conn, :get_users))
+        |> response(401)
+    end
+  end
+
   describe "[GET] /users:" do
 
     setup do

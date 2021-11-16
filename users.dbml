@@ -1,0 +1,26 @@
+Project Users {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Hangman Game Database
+    **Database for users service**
+  '''
+}
+Table user {
+  id int [pk, increment]
+  name varchar
+  created_at varchar [note: 'When user created']
+  updated_at varchar [note: 'When user updated']
+  note: "table 'users' contains user information"
+}
+Table credential {
+  id int [pk, increment]
+  email varchar [not null, unique]
+  password_hash varchar
+  admin boolean
+  active boolean
+  user_id int [not null, unique]
+  created_at varchar [note: 'When credential created']
+  updated_at varchar [note: 'When credential updated']
+  note: "table 'credential' contains user credential"
+}
+Ref: credential.user_id > user.id
