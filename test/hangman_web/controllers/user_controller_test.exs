@@ -361,6 +361,61 @@ defmodule HangmanWeb.UserControllerTest do
     end
   end
 
+  describe "[POST] /users/reset/pass:" do
+    setup do
+      conn = build_conn()
+      params = conn
+      |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
+      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
+      |> json_response(201)
+      {:ok, params: params}
+    end
+
+    test "Returns the user found in the database, and send the email to reset the password" do
+      conn = build_conn()
+
+      response =
+        conn
+        |> post(Routes.user_path(conn, :send_reset_password, %{email: "juan@example.com"}))
+        |> json_response(205)
+
+      assert %{
+        "user" => %{
+          "active" => _active,
+          "email" => _email,
+          "id" => _id,
+          "name" => _name
+        }
+      } = response
+    end
+
+    test "Error when 'email' is empty" do
+      conn = build_conn()
+
+      response =
+        conn
+        |> post(Routes.user_path(conn, :send_reset_password))
+        |> json_response(400)
+
+      assert %{
+        "email" => _error
+      } = response
+    end
+
+    test "Error when 'email' is wrong" do
+      conn = build_conn()
+
+      response =
+        conn
+        |> post(Routes.user_path(conn, :send_reset_password, %{email: "password@example.com"}))
+        |> json_response(400)
+
+      assert %{
+        "email" => _error
+      } = response
+    end
+  end
+
   describe "[DELETE] /users/:id:" do
     setup do
       conn = build_conn()

@@ -13,4 +13,15 @@ defmodule Hangman.Email do
     |> render("create-user-email.html")
     |> deliver_now()
   end
+
+  def user_reset_password(user, token) do
+    new_email()
+    |> from({"Hangman Team Support","hangman_team@outlook.com"})
+    |> to({user.name, user.credential.email})
+    |> subject("Reset your password")
+    |> assign(:user, user)
+    |> assign(:token, token)
+    |> render("reset-user-password.html")
+    |> deliver_now()
+  end
 end

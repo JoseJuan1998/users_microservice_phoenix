@@ -85,6 +85,11 @@ defmodule Hangman.Accounts do
     |> Repo.update()
   end
 
+  def reset_password(attrs \\ %{}) do
+    attrs
+    |> Credential.get_changeset_email()
+  end
+
   @doc """
   Deletes a user.
 

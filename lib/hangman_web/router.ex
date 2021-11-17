@@ -23,6 +23,7 @@ defmodule HangmanWeb.Router do
     options "/users/pass", OptionsController, :options
     options "/users/name/:id", OptionsController, :options
     options "/users/name", OptionsController, :options
+    options "/users/reset/pass", OptionsController, :options
 
     get "/users/:id", UserController, :get_user
     get "/users", UserController, :get_users
@@ -31,6 +32,7 @@ defmodule HangmanWeb.Router do
     put "/users/name", UserController, :update_name
     put "/users/pass/:id", UserController, :update_password
     put "/users/pass", UserController, :update_password
+    post "/users/reset/pass", UserController, :send_reset_password
     delete "/users/:id", UserController, :delete_user
     delete "/users", UserController, :delete_user
 

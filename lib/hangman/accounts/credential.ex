@@ -36,6 +36,24 @@ defmodule Hangman.Accounts.Credential do
     end
   end
 
+  def get_changeset_email(attrs) do
+    %__MODULE__{}
+    |> cast(attrs, [:email])
+    |> validate_required([:email])
+    |> get_credential_email()
+  end
+
+  defp get_credential_email(changeset) do
+    case changeset.valid? do
+      true ->
+        case Repo.get_by(__MODULE__, email: get_field(changeset, :email)) do
+          nil -> add_error(changeset, :email, "Credential not found")
+          credential -> credential |> Repo.preload(:user)
+        end
+      false -> changeset
+    end
+  end
+
   @doc false
   def create_changeset(credential, attrs) do
     credential

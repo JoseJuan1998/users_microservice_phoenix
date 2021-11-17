@@ -20,7 +20,7 @@ defmodule HangmanWeb.Authenticate do
     else
       conn
       |> put_status(:unauthorized)
-      |> redirect(external: "https://www.google.com")
+      |> redirect(external: "http://hangmangame1.eastus.cloudapp.azure.com/login")
       |> halt()
     end
   end

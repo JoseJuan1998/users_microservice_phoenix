@@ -172,4 +172,27 @@ defmodule Hangman.UserTest do
       assert chg.valid? == false
     end
   end
+
+  describe "[Unit] send_reset_password():" do
+    setup do
+      stored_user = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      {:ok, got_user} = stored_user
+      {:ok, user: got_user}
+    end
+
+    test "Return user founded and received de email", %{user: user} do
+      cred = Accounts.reset_password(%{email: "pedro@cordage.io"})
+      assert not is_nil(cred)
+    end
+
+    test "Error when 'emai' is empty" do
+      changeset = Accounts.reset_password()
+      assert changeset.valid? == false
+    end
+
+    test "Error when 'emai' is wrong" do
+      changeset = Accounts.reset_password(%{email: "pedro@cordagee.io"})
+      assert changeset.valid? == false
+    end
+  end
 end

@@ -75,6 +75,39 @@
         "deprecated": false
       }
     },
+    "/manager/users/reset/pass": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Send email reset password",
+        "responses": {
+          "205": {
+            "schema": {
+              "$ref": "#/definitions/ResetUserPasswordResponse"
+            },
+            "description": "Updated"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "$ref": "#/definitions/ResetUserPasswordRequest"
+            },
+            "required": true,
+            "name": "email",
+            "in": "body",
+            "description": "The user email"
+          }
+        ],
+        "operationId": "HangmanWeb.UserController.send_reset_password",
+        "description": "Search the user on the db and send the reset password email",
+        "deprecated": false
+      }
+    },
     "/manager/users/pass/{id}": {
       "put": {
         "tags": [
@@ -456,6 +489,45 @@
       "type": "object",
       "title": "ShowUserRequest",
       "description": "Request params to update a user"
+    },
+    "ResetUserPasswordResponse": {
+      "type": "object",
+      "title": "FoundUserResponseByEmail",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The user founded"
+        }
+      },
+      "example": {
+        "user": {
+          "name": "Jose",
+          "id": 1,
+          "email": "juan@cordage.io",
+          "active": true
+        }
+      },
+      "description": "Response schema of a single user"
+    },
+    "ResetUserPasswordRequest": {
+      "type": "object",
+      "title": "FoundUserRequestByEmail",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The user password"
+        }
+      },
+      "example": {
+        "email": "juan@cordage.io"
+      },
+      "description": "Request params to found a user to send email to reset password"
     },
     "DeleteUserResponse": {
       "type": "object",

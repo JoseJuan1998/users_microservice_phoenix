@@ -117,9 +117,7 @@ defmodule HangmanWeb.SessionControllerTest do
       response =
         conn
         |> delete(Routes.session_path(conn, :delete_session))
-        |> html_response(205)
-
-        assert "<html><body>You are being <a href=\"https://www.google.com\">redirected</a>.</body></html>" == response
+        |> response(205)
     end
   end
 
