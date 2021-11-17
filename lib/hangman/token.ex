@@ -8,11 +8,10 @@ defmodule Hangman.Token do
     Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", data)
   end
 
-  @spec refresh_sign(map()) :: binary()
-  def refresh_sign(data) do
-    Phoenix.Token.sign(HangmanWeb.Endpoint, "refresh", data)
+  @spec email_sign(map()) :: binary()
+  def email_sign(data) do
+    Phoenix.Token.sign(HangmanWeb.Endpoint, "email", data)
   end
-
 
   @doc """
   Verify given token by:
@@ -24,8 +23,8 @@ defmodule Hangman.Token do
     Phoenix.Token.verify(HangmanWeb.Endpoint, "auth", token, max_age: 3600)
   end
 
-  # @spec verify_refresh(String.t()) :: {:ok, any()} | {:error, :unauthenticated}
-  # def verify_refresh(token) do
-  #   Phoenix.Token.verify(HangmanWeb.Endpoint, "refresh", token, max_age: 86400)
-  # end
+  @spec verify_email(String.t()) :: {:ok, any()} | {:error, :unauthenticated}
+  def verify_email(token) do
+    Phoenix.Token.verify(HangmanWeb.Endpoint, "email", token, max_age: 86400*7)
+  end
 end

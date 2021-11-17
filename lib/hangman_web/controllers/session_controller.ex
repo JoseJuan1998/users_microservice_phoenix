@@ -80,7 +80,7 @@ defmodule HangmanWeb.SessionController do
           conn
           |> put_status(200)
           |> assign(:current_user, user.id)
-          |> render("session.json", %{user_id: user.id, token_auth: Token.auth_sign(user.id), token_refresh: Token.refresh_sign(user.id)})
+          |> render("session.json", %{user_id: user.id, token_auth: Token.auth_sign(user.id)})
         {:error, :unauthorized} ->
           {:error, "Wrong password"}
         {:error, :not_found} ->

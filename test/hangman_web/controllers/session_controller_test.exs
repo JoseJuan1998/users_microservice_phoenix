@@ -1,5 +1,6 @@
 defmodule HangmanWeb.SessionControllerTest do
   use HangmanWeb.ConnCase
+  alias Hangman.Token
 
   setup_all do: []
 
@@ -11,13 +12,13 @@ defmodule HangmanWeb.SessionControllerTest do
     setup do
       connc = build_conn()
       created = connc
-      |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
+      |> put_req_header("authorization", Token.auth_sign(1))
       |> post(Routes.user_path(connc, :create_user, %{name: "Juan", email: "juan@example.com"}))
       |> json_response(201)
 
       connu = build_conn()
       updated = connu
-      |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
+      |> put_req_header("authorization", Token.email_sign(1))
       |> put(Routes.user_path(connu, :update_password, created["user"]["id"], %{password: "Qwerty2021", password_confirmation: "Qwerty2021"}))
       |> json_response(205)
 
@@ -33,7 +34,6 @@ defmodule HangmanWeb.SessionControllerTest do
 
       assert %{
         "token_auth" => _auth,
-        "token_refresh" => _refresh,
         "user_id" => _id
       } = response
     end
@@ -91,7 +91,7 @@ defmodule HangmanWeb.SessionControllerTest do
     setup do
       connc = build_conn()
       created = connc
-      |> put_req_header("authorization", Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", 1))
+      |> put_req_header("authorization", Token.auth_sign(1))
       |> post(Routes.user_path(connc, :create_user, %{name: "Juan", email: "juan@example.com"}))
       |> json_response(201)
 

@@ -5,12 +5,16 @@ defmodule HangmanWeb.UserController do
   alias Hangman.Accounts.{User, Credential}
   alias Hangman.Email
   alias Hangman.Repo
+  alias Hangman.Token
   import Plug.Conn.Status, only: [code: 1]
   use PhoenixSwagger
 
   action_fallback HangmanWeb.UserErrorController
 
-  # plug :authenticate_api_user when action in [:get_users, :get_user, :create_user, :update_name, :update_password, :delete_user]
+  plug :authenticate_api_email_user when action in [:update_password]
+
+  plug :authenticate_api_user when action in [:get_users, :get_user, :create_user, :update_name, :delete_user]
+
 
   # def swagger_definitions do
   #   %{
@@ -268,7 +272,7 @@ defmodule HangmanWeb.UserController do
     end
     case Accounts.create_user(user_params) do
       {:ok, user} ->
-        token = Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", user.id)
+        token = Token.email_sign(user.id)
         Email.user_added_email(user, token)
         conn
         |> put_status(201)
@@ -346,7 +350,7 @@ defmodule HangmanWeb.UserController do
    case Accounts.reset_password(params) do
       %Credential{} = cred ->
         user = cred.user |> Repo.preload(:credential)
-        token = Phoenix.Token.sign(HangmanWeb.Endpoint, "auth", user.id)
+        token = Token.email_sign(user.id)
         Email.user_reset_password(user, token)
         conn
         |> put_status(205)
