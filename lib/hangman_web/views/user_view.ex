@@ -14,7 +14,8 @@ defmodule HangmanWeb.UserView do
       id: user.id,
       name: user.name,
       email: user.credential.email,
-      active: user.credential.active
+      active: user.credential.active,
+      admin: user.credential.admin
     }
   end
 end

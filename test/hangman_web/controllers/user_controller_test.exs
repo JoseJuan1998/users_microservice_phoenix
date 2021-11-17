@@ -21,7 +21,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
-        |> get(Routes.user_path(conn, :update_password))
+        |> put(Routes.user_path(conn, :update_password))
         |> response(401)
     end
   end
@@ -47,6 +47,7 @@ defmodule HangmanWeb.UserControllerTest do
       assert %{
         "users" => [%{
           "active" => _active,
+          "admin" => _admin,
           "email" => _email,
           "id" => _id,
           "name" => _name
@@ -93,6 +94,7 @@ defmodule HangmanWeb.UserControllerTest do
       assert %{
         "user" => %{
           "active" => _active,
+          "admin" => _admin,
           "email" => _email,
           "id" => _id,
           "name" => _name
@@ -131,6 +133,7 @@ defmodule HangmanWeb.UserControllerTest do
       assert %{
         "user" => %{
           "active" => _active,
+          "admin" => _admin,
           "email" => _email,
           "id" => _id,
           "name" => _name
@@ -214,6 +217,7 @@ defmodule HangmanWeb.UserControllerTest do
       assert %{
         "user" => %{
           "active" => _active,
+          "admin" => _admin,
           "email" => _email,
           "id" => _id,
           "name" => _name
@@ -276,6 +280,7 @@ defmodule HangmanWeb.UserControllerTest do
       assert %{
         "user" => %{
           "active" => _active,
+          "admin" => _admin,
           "email" => _email,
           "id" => _id,
           "name" => _name
@@ -446,6 +451,7 @@ defmodule HangmanWeb.UserControllerTest do
       assert %{
         "user" => %{
           "active" => _active,
+          "admin" => _admin,
           "email" => _email,
           "id" => _id,
           "name" => _name
