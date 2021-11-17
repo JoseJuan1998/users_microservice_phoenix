@@ -51,7 +51,7 @@
                 <h2>Welcome to Hangman Game Managers Team!</h2>
                 <h3>The final step to be part of us, is to activate your account, click the next button to verify <%= @user.credential.email %> email</h3>
                 <div class = "btn-container">
-                    <a href="http://hangmangame1.eastus.cloudapp.azure.com/password/<%= @token %>"><button class="btn">Activate account</button></a>
+                    <a href="http://hangmangame1.eastus.cloudapp.azure.com/password?token=<%= @token %>&id=<%= @user.id %>"><button class="btn">Activate account</button></a>
                 </div>
             </div>
         </div>

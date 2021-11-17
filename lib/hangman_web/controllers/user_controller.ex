@@ -10,7 +10,7 @@ defmodule HangmanWeb.UserController do
 
   action_fallback HangmanWeb.UserErrorController
 
-  plug :authenticate_api_user when action in [:get_users, :get_user, :create_user, :update_name, :update_password, :delete_user]
+  # plug :authenticate_api_user when action in [:get_users, :get_user, :create_user, :update_name, :update_password, :delete_user]
 
   # def swagger_definitions do
   #   %{
