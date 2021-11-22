@@ -11,37 +11,44 @@ defmodule Hangman.UserTest do
 
   describe "[Unit] create_user():" do
     setup do
-      stored_user = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      stored_user = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       {:ok, got_user} = stored_user
       {:ok, user: got_user}
     end
 
     test "Returns a user" do
       user = %User{}
-      changeset = Accounts.change_user(user, %{name: "Zuli", credential: %{email: "zuli@cordage.io"}})
+      changeset = Accounts.change_user(user, %{name: "Zuli", lastname: "Morado", credential: %{email: "zuli@cordage.io"}})
       assert changeset.valid? == true
     end
 
     test "Error when 'email' already exists" do
-      {:error, changeset} = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      {:error, changeset} = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       assert changeset.valid? == false
+      Hangman.DataCase.errors_on(changeset)
     end
 
     test "Error when 'name' is empty" do
       user = %User{}
-      changeset = Accounts.change_user(user, %{credential: %{email: "zuli@cordage.io"}})
+      changeset = Accounts.change_user(user, %{lastname: "Morado", credential: %{email: "zuli@cordage.io"}})
+      assert changeset.valid? == false
+    end
+
+    test "Error when 'lastname' is empty" do
+      user = %User{}
+      changeset = Accounts.change_user(user, %{name: "Zuli", credential: %{email: "zuli@cordage.io"}})
       assert changeset.valid? == false
     end
 
     test "Error when 'email' is empty" do
       user = %User{}
-      changeset = Accounts.change_user(user, %{name: "Zuli", credential: %{}})
+      changeset = Accounts.change_user(user, %{name: "Zuli", lastname: "Morado", credential: %{}})
       assert changeset.valid? == false
     end
 
     test "Error when 'email' is invalid format" do
       user = %User{}
-      changeset = Accounts.change_user(user, %{name: "Zuli", credential: %{email: "zulicordage.io"}})
+      changeset = Accounts.change_user(user, %{name: "Zuli", lastname: "Morado", credential: %{email: "zulicordage.io"}})
       assert changeset.valid? == false
     end
 
@@ -54,18 +61,17 @@ defmodule Hangman.UserTest do
 
   describe "[Unit] get_users():" do
     setup do
-      stored_user = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      stored_user = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       {:ok, got_user} = stored_user
       {:ok, user: got_user}
     end
 
     test "Return all users" do
-      users = Accounts.list_users()
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5"})
       assert users != []
     end
 
-    test "Error when 'users' is empty", %{user: user} do
-      Accounts.delete_user(%{id: user.id})
+    test "Error when 'users' is empty"do
       users = Accounts.list_users()
       assert users == []
     end
@@ -73,7 +79,7 @@ defmodule Hangman.UserTest do
 
   describe "[Unit] get_user():" do
     setup do
-      stored_user = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      stored_user = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       {:ok, got_user} = stored_user
       {:ok, user: got_user}
     end
@@ -87,11 +93,16 @@ defmodule Hangman.UserTest do
       chg = Accounts.get_user(%{id: user.id+1})
       assert chg.valid? == false
     end
+
+    test "Error when 'id' is empty" do
+      chg = Accounts.get_user()
+      assert chg.valid? == false
+    end
   end
 
   describe "[Unit] delete_user():" do
     setup do
-      stored_user = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      stored_user = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       {:ok, got_user} = stored_user
       {:ok, user: got_user}
     end
@@ -105,11 +116,16 @@ defmodule Hangman.UserTest do
       {:error, chg} = Accounts.delete_user(%{id: user.id+1})
       assert chg.valid? == false
     end
+
+    test "Error when 'id' is empty" do
+      {:error, chg} = Accounts.delete_user(%{})
+      assert chg.valid? == false
+    end
   end
 
   describe "[Unit] update_name():" do
     setup do
-      stored_user = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      stored_user = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       {:ok, got_user} = stored_user
       {:ok, user: got_user}
     end
@@ -132,7 +148,7 @@ defmodule Hangman.UserTest do
 
   describe "[Unit] update_password():" do
     setup do
-      stored_user = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      stored_user = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       {:ok, got_user} = stored_user
       {:ok, user: got_user}
     end
@@ -175,7 +191,7 @@ defmodule Hangman.UserTest do
 
   describe "[Unit] send_reset_password():" do
     setup do
-      stored_user = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      stored_user = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       {:ok, got_user} = stored_user
       {:ok, user: got_user}
     end

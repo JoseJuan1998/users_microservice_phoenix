@@ -1,6 +1,57 @@
 {
   "swagger": "2.0",
   "paths": {
+    "/manager/users/{np}/{nr}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "All Users",
+        "responses": {
+          "204": {
+            "schema": {
+              "$ref": "#/definitions/ShowUsersEmptyResponse"
+            },
+            "description": "No users"
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/ShowUsersResponse"
+            },
+            "description": "Success"
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "type": "string",
+            "required": true,
+            "name": "authorization",
+            "in": "header",
+            "description": "Token to access"
+          },
+          {
+            "type": "string",
+            "required": true,
+            "name": "np",
+            "in": "path",
+            "description": "The current page"
+          },
+          {
+            "type": "string",
+            "required": true,
+            "name": "nr",
+            "in": "path",
+            "description": "The rows per page"
+          }
+        ],
+        "operationId": "HangmanWeb.UserController.get_users",
+        "description": "Return JSON with all users listed in the database",
+        "deprecated": false
+      }
+    },
     "/manager/users/{id}": {
       "get": {
         "tags": [
@@ -8,6 +59,12 @@
         ],
         "summary": "Specific User",
         "responses": {
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ShowUserResponseWrongId"
+            },
+            "description": "Id wrong"
+          },
           "200": {
             "schema": {
               "$ref": "#/definitions/ShowUserResponse"
@@ -82,6 +139,12 @@
         ],
         "summary": "Send email reset password",
         "responses": {
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ResetUserPasswordResponseError"
+            },
+            "description": "Bad Request"
+          },
           "205": {
             "schema": {
               "$ref": "#/definitions/ResetUserPasswordResponse"
@@ -209,6 +272,12 @@
         ],
         "summary": "Add a new user",
         "responses": {
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/CreateUserResponseErrors"
+            },
+            "description": "Bad Request"
+          },
           "201": {
             "schema": {
               "$ref": "#/definitions/CreateUserResponse"
@@ -239,35 +308,6 @@
         ],
         "operationId": "HangmanWeb.UserController.create_user",
         "description": "Create a new user in the database",
-        "deprecated": false
-      },
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "All Users",
-        "responses": {
-          "200": {
-            "schema": {
-              "$ref": "#/definitions/ShowUsersResponse"
-            },
-            "description": "Success"
-          }
-        },
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "type": "string",
-            "required": true,
-            "name": "authorization",
-            "in": "header",
-            "description": "Token to access"
-          }
-        ],
-        "operationId": "HangmanWeb.UserController.get_users",
-        "description": "Return JSON with all users listed in the database",
         "deprecated": false
       }
     },
@@ -377,8 +417,10 @@
       "example": {
         "user": {
           "name": "Jose",
+          "lastname": "Rincón",
           "id": 1,
           "email": "juan@cordage.io",
+          "admin": false,
           "active": true
         }
       },
@@ -417,8 +459,10 @@
       "example": {
         "user": {
           "name": "Jose",
+          "lastname": "Rincón",
           "id": 1,
           "email": "juan@cordage.io",
+          "admin": false,
           "active": false
         }
       },
@@ -437,7 +481,8 @@
         }
       },
       "example": {
-        "name": "Jose"
+        "name": "Jose",
+        "lastname": "Rincón"
       },
       "description": "Reques params to update a name of the user"
     },
@@ -456,12 +501,30 @@
       "example": {
         "user": {
           "name": "Juan",
+          "lastname": "Rincón",
           "id": 1,
           "email": "juan@cordage.io",
+          "admin": false,
           "active": false
         }
       },
       "description": "Response schema of the user created"
+    },
+    "ShowUsersEmptyResponse": {
+      "type": "object",
+      "title": "CreateUserResponse",
+      "example": {
+        "error": "There are no users"
+      },
+      "description": "Response error users empty"
+    },
+    "ShowUserResponseWrongId": {
+      "type": "object",
+      "title": "ShowUserErrorResponse",
+      "example": {
+        "id": "User not found"
+      },
+      "description": "Response error when id is wrong"
     },
     "ShowUserResponse": {
       "type": "object",
@@ -478,8 +541,10 @@
       "example": {
         "user": {
           "name": "Juan",
+          "lastname": "Rincón",
           "id": 1,
           "email": "juan@cordage.io",
+          "admin": false,
           "active": false
         }
       },
@@ -489,6 +554,15 @@
       "type": "object",
       "title": "ShowUserRequest",
       "description": "Request params to update a user"
+    },
+    "ResetUserPasswordResponseError": {
+      "type": "object",
+      "title": "FoundUserResponseByEmail",
+      "example": {
+        "email2": "Credential not found",
+        "email1": "can't be blank"
+      },
+      "description": "Response error of search email"
     },
     "ResetUserPasswordResponse": {
       "type": "object",
@@ -505,8 +579,10 @@
       "example": {
         "user": {
           "name": "Jose",
+          "lastname": "Rincón",
           "id": 1,
           "email": "juan@cordage.io",
+          "admin": false,
           "active": true
         }
       },
@@ -544,8 +620,10 @@
       "example": {
         "user": {
           "name": "Juan",
+          "lastname": "Rincón",
           "id": 1,
           "email": "juan@cordage.io",
+          "admin": false,
           "active": false
         }
       },
@@ -608,6 +686,19 @@
       },
       "description": "Managers credential"
     },
+    "CreateUserResponseErrors": {
+      "type": "object",
+      "title": "CreateUserResponseErrors",
+      "example": {
+        "name": "can't be blank",
+        "lastname": "can't be blank",
+        "credential": {
+          "email2": "has invalid format",
+          "email1": "can't be blank"
+        }
+      },
+      "description": "Response errors from create user"
+    },
     "CreateUserResponse": {
       "type": "object",
       "title": "CreateUserResponse",
@@ -623,8 +714,10 @@
       "example": {
         "user": {
           "name": "Juan",
+          "lastname": "Rincón",
           "id": 1,
           "email": "juan@cordage.io",
+          "admin": false,
           "active": false
         }
       },

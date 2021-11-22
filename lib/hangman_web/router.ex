@@ -20,13 +20,18 @@ defmodule HangmanWeb.Router do
     options "/users/:id", OptionsController, :options
     options "/users", OptionsController, :options
     options "/users/pass/:id", OptionsController, :options
+    # coveralls-ignore-start
     options "/users/pass", OptionsController, :options
+    # coveralls-ignore-stop
     options "/users/name/:id", OptionsController, :options
+    # coveralls-ignore-start
     options "/users/name", OptionsController, :options
+    # coveralls-ignore-stop
     options "/users/reset/pass", OptionsController, :options
 
     get "/users/:id", UserController, :get_user
     get "/users", UserController, :get_users
+    get "/users/:np/:nr", UserController, :get_users
     post "/users", UserController, :create_user
     put "/users/name/:id", UserController, :update_name
     put "/users/name", UserController, :update_name
@@ -44,6 +49,7 @@ defmodule HangmanWeb.Router do
   end
 
   ## Swagger
+  # coveralls-ignore-start
   def swagger_info do
     %{
       info: %{
@@ -52,7 +58,7 @@ defmodule HangmanWeb.Router do
       }
     }
   end
-
+  # coveralls-ignore-stop
   # if Mix.env == :dev do
   #   forward "/sent_emails", Bamboo.EmailPreviewPlug
   # end
@@ -70,24 +76,11 @@ defmodule HangmanWeb.Router do
   # If your application does not have an admins-only section yet,
   # you can use Plug.BasicAuth to set up some basic authentication
   # as long as you are also using SSL (which you should anyway).
-  if Mix.env() in [:dev, :test] do
-    import Phoenix.LiveDashboard.Router
 
-    scope "/" do
-      pipe_through [:fetch_session, :protect_from_forgery]
-      live_dashboard "/dashboard", metrics: HangmanWeb.Telemetry
-    end
-  end
 
   # Enables the Swoosh mailbox preview in development.
   #
   # Note that preview only shows emails that were sent by the same
   # node running the Phoenix server.
-  if Mix.env() == :dev do
-    scope "/dev" do
-      pipe_through [:fetch_session, :protect_from_forgery]
 
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
-    end
-  end
 end

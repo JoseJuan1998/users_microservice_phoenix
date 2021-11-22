@@ -6,6 +6,7 @@ defmodule Hangman.Accounts.User do
 
   schema "users" do
     field :name, :string
+    field :lastname, :string
     has_one :credential, Credential, on_delete: :delete_all
 
     timestamps()
@@ -30,9 +31,9 @@ defmodule Hangman.Accounts.User do
 
   def create_changeset(user, attrs) do
     user
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :lastname])
     |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.create_changeset/2)
-    |> validate_required([:name, :credential])
+    |> validate_required([:name, :lastname, :credential])
   end
 
   def found_changeset(attrs) do
@@ -43,8 +44,8 @@ defmodule Hangman.Accounts.User do
   def update_changeset(attrs) do
     attrs
     |> get_changeset()
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :lastname])
+    |> validate_required([:name, :lastname])
   end
 
   def delete_changeset(attrs) do

@@ -24,10 +24,12 @@ defmodule HangmanWeb.ErrorHelpers do
     # Note we use the "errors" domain, which means translations
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
+    # coveralls-ignore-start
     if count = opts[:count] do
       Gettext.dngettext(HangmanWeb.Gettext, "errors", msg, msg, count, opts)
     else
       Gettext.dgettext(HangmanWeb.Gettext, "errors", msg, opts)
     end
+    # coveralls-ignore-stop
   end
 end

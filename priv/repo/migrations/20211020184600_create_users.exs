@@ -4,7 +4,7 @@ defmodule Hangman.Repo.Migrations.CreateUsers do
   def change do
     create table(:users) do
       add :name, :string
-
+      add :lastname, :string
       timestamps()
     end
   end

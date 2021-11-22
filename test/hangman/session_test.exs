@@ -10,7 +10,7 @@ defmodule Hangman.SessionTest do
 
   describe "[Unit] create_session():" do
     setup do
-      {:ok, created_user} = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      {:ok, created_user} = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       {:ok, updated_user} = Accounts.update_password(%{id: created_user.id, password: "Qwerty2021", password_confirmation: "Qwerty2021"})
       {:ok, user: updated_user}
     end
@@ -39,7 +39,7 @@ defmodule Hangman.SessionTest do
 
   describe "ERROR [Unit] create_session():" do
     setup do
-      {:ok, created_user} = Accounts.create_user(%{name: "Pedro", credential: %{email: "pedro@cordage.io"}})
+      {:ok, created_user} = Accounts.create_user(%{name: "Pedro", lastname: "Ortega", credential: %{email: "pedro@cordage.io"}})
       {:ok, user: created_user}
     end
 

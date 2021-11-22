@@ -17,6 +17,7 @@ defmodule HangmanWeb.ChannelCase do
 
   use ExUnit.CaseTemplate
 
+  # coveralls-ignore-start
   using do
     quote do
       # Import conveniences for testing with channels
@@ -33,4 +34,5 @@ defmodule HangmanWeb.ChannelCase do
     on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
     :ok
   end
+  #coveralls-ignore-stop
 end

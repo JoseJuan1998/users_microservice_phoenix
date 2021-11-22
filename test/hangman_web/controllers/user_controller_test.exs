@@ -32,7 +32,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       conn
       |> put_req_header("authorization", Token.auth_sign(1))
-      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
+      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
     end
 
@@ -41,7 +41,7 @@ defmodule HangmanWeb.UserControllerTest do
       response =
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
-        |> get(Routes.user_path(conn, :get_users))
+        |> get(Routes.user_path(conn, :get_users, 1, 5))
         |> json_response(:ok)
 
       assert %{
@@ -50,7 +50,8 @@ defmodule HangmanWeb.UserControllerTest do
           "admin" => _admin,
           "email" => _email,
           "id" => _id,
-          "name" => _name
+          "name" => _name,
+          "lastname" => _lastname
         }]
         } = response
     end
@@ -64,7 +65,7 @@ defmodule HangmanWeb.UserControllerTest do
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
         |> get(Routes.user_path(conn, :get_users))
-        |> json_response(400)
+        |> json_response(200)
 
       assert %{
         "error" => _error
@@ -78,7 +79,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       params = conn
       |> put_req_header("authorization", Token.auth_sign(1))
-      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
+      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
       {:ok, params: params}
     end
@@ -97,7 +98,8 @@ defmodule HangmanWeb.UserControllerTest do
           "admin" => _admin,
           "email" => _email,
           "id" => _id,
-          "name" => _name
+          "name" => _name,
+          "lastname" => _lastname
         }
         } = response
     end
@@ -127,7 +129,7 @@ defmodule HangmanWeb.UserControllerTest do
       response =
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
-        |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
+        |> post(Routes.user_path(conn, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
         |> json_response(201)
 
       assert %{
@@ -136,7 +138,8 @@ defmodule HangmanWeb.UserControllerTest do
           "admin" => _admin,
           "email" => _email,
           "id" => _id,
-          "name" => _name
+          "name" => _name,
+          "lastname" => _lastname
         }
         } = response
     end
@@ -146,11 +149,24 @@ defmodule HangmanWeb.UserControllerTest do
       response =
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
-        |> post(Routes.user_path(conn, :create_user, %{email: "juan@example.com"}))
+        |> post(Routes.user_path(conn, :create_user, %{lastname: "Rincón", email: "juan@example.com"}))
         |> json_response(400)
 
       assert %{
         "name" => _name
+        } = response
+    end
+
+    test "Error when 'lastname' is empty" do
+      conn = build_conn()
+      response =
+        conn
+        |> put_req_header("authorization", Token.auth_sign(1))
+        |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
+        |> json_response(400)
+
+      assert %{
+        "lastname" => _lastname
         } = response
     end
 
@@ -159,12 +175,14 @@ defmodule HangmanWeb.UserControllerTest do
       response =
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
-        |> post(Routes.user_path(conn, :create_user, %{name: "Juan"}))
+        |> post(Routes.user_path(conn, :create_user, %{name: "Juan", lastname: "Rincón"}))
         |> json_response(400)
 
       assert %{
-        "email" => _email
-        } = response
+        "credential" => %{
+         "email" => _email
+        }
+      } = response
     end
 
     test "Error when 'email' is invalid format" do
@@ -172,12 +190,14 @@ defmodule HangmanWeb.UserControllerTest do
       response =
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
-        |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juanexample.com"}))
+        |> post(Routes.user_path(conn, :create_user, %{name: "Juan", lastname: "Rincón", email: "juanexample.com"}))
         |> json_response(400)
 
       assert %{
-        "email" => _email
-        } = response
+        "credential" => %{
+          "email" => _email
+        }
+      } = response
     end
 
     test "Error when 'params' are empty" do
@@ -189,8 +209,11 @@ defmodule HangmanWeb.UserControllerTest do
         |> json_response(400)
 
       assert %{
-        "email" => _email,
-        "name" => _name
+        "credential" => %{
+          "email" => _email
+         },
+        "name" => _name,
+        "lastname" => _lastname
         } = response
     end
   end
@@ -200,7 +223,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       params = conn
       |> put_req_header("authorization", Token.auth_sign(1))
-      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
+      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
       {:ok, params: params}
     end
@@ -220,7 +243,8 @@ defmodule HangmanWeb.UserControllerTest do
           "admin" => _admin,
           "email" => _email,
           "id" => _id,
-          "name" => _name
+          "name" => _name,
+          "lastname" => _lastname
         }
         } = response
     end
@@ -283,7 +307,8 @@ defmodule HangmanWeb.UserControllerTest do
           "admin" => _admin,
           "email" => _email,
           "id" => _id,
-          "name" => _name
+          "name" => _name,
+          "lastname" => _lastname
         }
         } = response
     end
@@ -380,7 +405,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       params = conn
       |> put_req_header("authorization", Token.auth_sign(1))
-      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
+      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
       {:ok, params: params}
     end
@@ -435,7 +460,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       params = conn
       |> put_req_header("authorization", Token.auth_sign(1))
-      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", email: "juan@example.com"}))
+      |> post(Routes.user_path(conn, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
       {:ok, params: params}
     end
@@ -454,7 +479,8 @@ defmodule HangmanWeb.UserControllerTest do
           "admin" => _admin,
           "email" => _email,
           "id" => _id,
-          "name" => _name
+          "name" => _name,
+          "lastname" => _lastname
         }
         } = response
     end
@@ -464,7 +490,7 @@ defmodule HangmanWeb.UserControllerTest do
       response =
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
-        |> delete(Routes.user_path(conn, :delete_user, :id))
+        |> delete(Routes.user_path(conn, :delete_user))
         |> json_response(400)
 
       assert %{

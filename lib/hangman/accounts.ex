@@ -17,8 +17,14 @@ defmodule Hangman.Accounts do
       [%User{}, ...]
 
   """
-  def list_users do
-    Repo.all(User)
+  def list_users(attrs \\ %{}) do
+    query = cond do
+      not is_nil(attrs["np"]) and not is_nil(attrs["nr"]) ->
+        from u in User, offset: ^((String.to_integer(attrs["np"]) - 1) * String.to_integer(attrs["nr"])), limit: ^attrs["nr"], select: u
+      true ->
+        from u in User, offset: 0, limit: 0, select: u
+    end
+    Repo.all(query)
     |> Repo.preload(:credential)
   end
 

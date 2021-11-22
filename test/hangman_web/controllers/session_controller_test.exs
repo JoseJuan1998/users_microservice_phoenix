@@ -13,7 +13,7 @@ defmodule HangmanWeb.SessionControllerTest do
       connc = build_conn()
       created = connc
       |> put_req_header("authorization", Token.auth_sign(1))
-      |> post(Routes.user_path(connc, :create_user, %{name: "Juan", email: "juan@example.com"}))
+      |> post(Routes.user_path(connc, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
 
       connu = build_conn()
@@ -92,7 +92,7 @@ defmodule HangmanWeb.SessionControllerTest do
       connc = build_conn()
       created = connc
       |> put_req_header("authorization", Token.auth_sign(1))
-      |> post(Routes.user_path(connc, :create_user, %{name: "Juan", email: "juan@example.com"}))
+      |> post(Routes.user_path(connc, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
 
       {:ok, params: created}
