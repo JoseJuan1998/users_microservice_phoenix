@@ -3,6 +3,7 @@ defmodule Hangman.Accounts do
   alias Hangman.Repo
   alias Hangman.Accounts.Credential
   alias Hangman.Accounts.User
+  alias Hangman.Accounts.EmailToken
 
   def list_users(attrs \\ %{}) do
     query = cond do
@@ -80,5 +81,17 @@ defmodule Hangman.Accounts do
       true ->
         {:error, :not_email}
     end
+  end
+
+  def create_email_token(attrs \\ %{}) do
+    attrs
+    |> EmailToken.create_changeset()
+    |> Repo.insert()
+  end
+
+  def delete_email_token(attrs \\ %{}) do
+    attrs
+    |> EmailToken.delete_changeset()
+    |> Repo.delete()
   end
 end

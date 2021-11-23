@@ -41,9 +41,14 @@ defmodule HangmanWeb.Authenticate do
     case Token.verify_auth(token) do
       {:ok, user_id} -> {:ok, user_id}
       _unauthorized ->
-        case Token.verify_email(token) do
-          {:ok, user_id} -> {:ok, user_id}
-          _unauthorized -> {:error, :invalid}
+        case Accounts.delete_email_token(%{"token" => token}) do
+          {:ok, token} ->
+            case Token.verify_email(token) do
+              {:ok, user_id} -> {:ok, user_id}
+              _unauthorized -> {:error, :invalid}
+            end
+          {:error, changeset} ->
+            {:error, :invalid}
         end
     end
   end
