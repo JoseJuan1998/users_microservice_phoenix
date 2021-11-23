@@ -18,12 +18,14 @@ defmodule Hangman.Accounts.EmailToken do
 
   defp get_token(%{valid?: false} = changeset), do: changeset
 
+  # coveralls-ignore-start
   defp get_token(%{valid?: true} = changeset) do
     case Repo.get_by(__MODULE__, token: get_field(changeset, :token)) do
       nil -> add_error(changeset, :token, "Token not found")
       token -> token
     end
   end
+  # coveralls-ignore-stop
 
   def create_changeset(attrs) do
     %__MODULE__{}

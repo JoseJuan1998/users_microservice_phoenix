@@ -19,15 +19,13 @@ defmodule HangmanWeb.Router do
     options "/users/:id", OptionsController, :options
     options "/users/:np/:nr", OptionsController, :options
     options "/users", OptionsController, :options
+    # coveralls-ignore-start
     options "/users/pass/:id", OptionsController, :options
-    # coveralls-ignore-start
     options "/users/pass", OptionsController, :options
-    # coveralls-ignore-stop
     options "/users/name/:id", OptionsController, :options
-    # coveralls-ignore-start
     options "/users/name", OptionsController, :options
-    # coveralls-ignore-stop
     options "/users/reset/pass", OptionsController, :options
+    # coveralls-ignore-stop
 
     get "/users/:id", UserController, :get_user
     get "/users", UserController, :get_users

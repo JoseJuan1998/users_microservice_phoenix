@@ -1,6 +1,7 @@
 defmodule HangmanWeb.UserControllerTest do
   use HangmanWeb.ConnCase
   alias Hangman.Token
+  alias Hangman.Accounts
 
   setup_all do: []
 
@@ -297,7 +298,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
-        |> put_req_header("authorization", Token.email_sign(1))
+        |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "Qwerty2021", password_confirmation: "Qwerty2021"}))
         |> json_response(205)
 
@@ -318,7 +319,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
-        |> put_req_header("authorization", Token.email_sign(1))
+        |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_password, :id, %{password: "Qwerty", password_confirmation: "Qwerty2021"}))
         |> json_response(400)
 
@@ -328,11 +329,11 @@ defmodule HangmanWeb.UserControllerTest do
     end
 
     test "Error when 'id' is wrong for password" do
-
+      
       conn = build_conn()
       response =
         conn
-        |> put_req_header("authorization", Token.email_sign(1))
+        |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_password, 0, %{password: "Qwerty", password_confirmation: "Qwerty2021"}))
         |> json_response(400)
 
@@ -346,7 +347,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
-        |> put_req_header("authorization", Token.email_sign(1))
+        |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password_confirmation: "Qwerty2021"}))
         |> json_response(400)
 
@@ -361,7 +362,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
-        |> put_req_header("authorization", Token.email_sign(1))
+        |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "Qwerty2021"}))
         |> json_response(400)
 
@@ -375,7 +376,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
-        |> put_req_header("authorization", Token.email_sign(1))
+        |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "qwerty2021", password_confirmation: "Qwerty2021"}))
         |> json_response(400)
 
@@ -390,7 +391,7 @@ defmodule HangmanWeb.UserControllerTest do
       conn = build_conn()
       response =
         conn
-        |> put_req_header("authorization", Token.email_sign(1))
+        |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "Qwerty2021", password_confirmation: "qwerty2021"}))
         |> json_response(400)
 

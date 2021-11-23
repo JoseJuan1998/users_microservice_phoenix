@@ -15,10 +15,9 @@ defmodule HangmanWeb.SessionControllerTest do
       |> put_req_header("authorization", Token.auth_sign(1))
       |> post(Routes.user_path(connc, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
-
       connu = build_conn()
       updated = connu
-      |> put_req_header("authorization", Token.email_sign(1))
+      |> put_req_header("authorization", Token.auth_sign(1))
       |> put(Routes.user_path(connu, :update_password, created["user"]["id"], %{password: "Qwerty2021", password_confirmation: "Qwerty2021"}))
       |> json_response(205)
 

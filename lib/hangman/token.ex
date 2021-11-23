@@ -23,8 +23,10 @@ defmodule Hangman.Token do
     Phoenix.Token.verify(HangmanWeb.Endpoint, "auth", token, max_age: 3600)
   end
 
+  # coveralls-ignore-start
   @spec verify_email(String.t()) :: {:ok, any()} | {:error, :unauthenticated}
   def verify_email(token) do
     Phoenix.Token.verify(HangmanWeb.Endpoint, "email", token, max_age: 86400*7)
   end
+  # coveralls-ignore-stop
 end

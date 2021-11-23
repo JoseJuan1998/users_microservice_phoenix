@@ -2,6 +2,7 @@ defmodule HangmanWeb.Authenticate do
   import Plug.Conn
   import Phoenix.Controller
   alias Hangman.Token
+  alias Hangman.Accounts
 
   def init(opts), do: opts
 
@@ -43,10 +44,12 @@ defmodule HangmanWeb.Authenticate do
       _unauthorized ->
         case Accounts.delete_email_token(%{"token" => token}) do
           {:ok, token} ->
+            # coveralls-ignore-start
             case Token.verify_email(token) do
               {:ok, user_id} -> {:ok, user_id}
               _unauthorized -> {:error, :invalid}
             end
+            # coveralls-ignore-stop
           {:error, changeset} ->
             {:error, :invalid}
         end
