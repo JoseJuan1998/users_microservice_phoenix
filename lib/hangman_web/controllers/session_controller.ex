@@ -42,26 +42,39 @@ defmodule HangmanWeb.SessionController do
           end
         end,
       CreateSessionRequest:
-      swagger_schema do
-        title("CreateUserRequest")
-        description("POST body for creating a user")
-        property(:users, Schema.array(:User), "The users details")
-        example(%{
-            email: "juan@cordage.io",
-            password: "Qwerty2021"
-        })
-      end,
-      CreateSessionResponse:
-          swagger_schema do
-          title("CreateSessionResponse")
-          description("Response and id")
+        swagger_schema do
+          title("CreateUserRequest")
+          description("POST body for creating a user")
           property(:users, Schema.array(:User), "The users details")
           example(%{
-            token_auth: "SFMyNTY.g2gDYQduBgA01y8LfQFiAAFRgA.5IuDTyU07BU1DdTfVLPv5aDydsg7tdRNMhC33cL__NA",
-            token_refresh: "SFMyNTY.g2gDYQduBgA01y8LfQFiAAFRgA.9mGWauIJ7RdO86yfQ_m9wvXefmb5kEy8yiI57yOOz5o",
-            user_id: 1
+              email: "juan@cordage.io",
+              password: "Qwerty2021"
           })
-          end
+        end,
+      CreateSessionResponse:
+        swagger_schema do
+        title("CreateSessionResponse")
+        description("Response and id")
+        property(:users, Schema.array(:User), "The users details")
+        example(%{
+          token_auth: "SFMyNTY.g2gDYQduBgA01y8LfQFiAAFRgA.5IuDTyU07BU1DdTfVLPv5aDydsg7tdRNMhC33cL__NA",
+          token_refresh: "SFMyNTY.g2gDYQduBgA01y8LfQFiAAFRgA.9mGWauIJ7RdO86yfQ_m9wvXefmb5kEy8yiI57yOOz5o",
+          user_id: 1
+        })
+        end,
+      CreateSessionResponseError:
+        swagger_schema do
+        title("CreateSessionResponse")
+        description("Response and id")
+        property(:users, Schema.array(:User), "The users details")
+        example(%{
+          error1: "user not found",
+          error2: "wrong password",
+          error3: "inactive account",
+          error4: "email can't be blank",
+          error5: "password can't be blank"
+        })
+        end
     }
   end
 
@@ -73,6 +86,7 @@ defmodule HangmanWeb.SessionController do
       deprecated(false)
       parameter(:user, :body, Schema.ref(:CreateSessionRequest), "The user details")
       response(200, "Success",Schema.ref(:CreateSessionResponse))
+      response(400, "Bad Request",Schema.ref(:CreateSessionResponseError))
   end
   # coveralls-ignore-stop
 

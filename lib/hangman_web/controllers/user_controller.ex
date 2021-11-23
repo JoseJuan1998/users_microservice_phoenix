@@ -94,14 +94,14 @@ defmodule HangmanWeb.UserController do
           description("Response schema of the user created")
           property(:users, Schema.array(:User), "The list of users")
           example(%{
-            user: %{
+            users: [%{
               id: 1,
               name: "Juan",
               lastname: "Rincón",
               email: "juan@cordage.io",
               active: false,
               admin: false
-            }
+            }]
           })
         end,
       ShowUsersEmptyResponse:
@@ -168,6 +168,16 @@ defmodule HangmanWeb.UserController do
               }
           })
         end,
+      UpdateUserNameResponseError:
+        swagger_schema do
+          title("UpdateUserNameResponseError")
+          description("Response schema of a single user")
+          property(:users, Schema.array(:User), "The user updated")
+          example(%{
+            id1: "can't be blank",
+            id2: "User not found"
+          })
+        end,
       UpdateUserPasswordRequest:
         swagger_schema do
           title("ShowUserResponse")
@@ -193,7 +203,21 @@ defmodule HangmanWeb.UserController do
               admin: false
               }
           })
-            end,
+        end,
+      UpdateUserPasswordResponseError:
+        swagger_schema do
+          title("UpdateUserPasswordResponseError")
+          description("Response schema of a single user")
+          property(:users, Schema.array(:User), "The user updated")
+          example(%{
+            id1: "can't be blank",
+            id2: "User not found",
+            password1: "can't be blank",
+            password2: "has invalid format",
+            password_confirmation1: "can't be blank",
+            password_confirmation: "does not match confirmation"
+          })
+        end,
       ResetUserPasswordRequest:
         swagger_schema do
           title("FoundUserRequestByEmail")
@@ -248,6 +272,16 @@ defmodule HangmanWeb.UserController do
               admin: false
               }
           })
+        end,
+      DeleteUserResponseError:
+        swagger_schema do
+          title("DeleteUserResponse")
+          description("Response schema of a single user")
+          property(:users, Schema.array(:User), "The user deleted")
+          example(%{
+            id1: "can't be blank",
+            id2: "User not found"
+          })
         end
     }
   end
@@ -294,7 +328,7 @@ defmodule HangmanWeb.UserController do
     produces("application/json")
     deprecated(false)
     response(200, "User created OK", Schema.ref(:ShowUserResponse))
-    response(400, "Id wrong", Schema.ref(:ShowUserResponseWrongId))
+    response(404, "Id wrong", Schema.ref(:ShowUserResponseWrongId))
   end
   # coveralls-ignore-stop
 
@@ -354,6 +388,7 @@ defmodule HangmanWeb.UserController do
       name :body, Schema.ref(:UpdateUserNameRequest), "The user name", required: true
     end
     response(205, "Updated",Schema.ref(:UpdateUserNameResponse))
+    response(400, "Bad Request", Schema.ref(:UpdateUserNameResponseError))
   end
   # coveralls-ignore-stop
 
@@ -381,6 +416,7 @@ defmodule HangmanWeb.UserController do
       password :body, Schema.ref(:UpdateUserPasswordRequest), "The user password", required: true
     end
     response(205, "Updated",Schema.ref(:UpdateUserPasswordResponse))
+    response(400, "Bad Request", Schema.ref(:UpdateUserPasswordResponseError))
   end
   #coveralls-ignore-stop
 
@@ -437,6 +473,7 @@ defmodule HangmanWeb.UserController do
     produces("application/json")
     deprecated(false)
     response(205, "Deleted",Schema.ref(:DeleteUserResponse))
+    response(400, "Bad Request",Schema.ref(:DeleteUserResponseError))
   end
   # coveralls-ignore-stop
 

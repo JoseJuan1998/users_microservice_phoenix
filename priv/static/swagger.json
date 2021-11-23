@@ -59,7 +59,7 @@
         ],
         "summary": "Specific User",
         "responses": {
-          "400": {
+          "404": {
             "schema": {
               "$ref": "#/definitions/ShowUserResponseWrongId"
             },
@@ -101,6 +101,12 @@
         ],
         "summary": "Specific User",
         "responses": {
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/DeleteUserResponseError"
+            },
+            "description": "Bad Request"
+          },
           "205": {
             "schema": {
               "$ref": "#/definitions/DeleteUserResponse"
@@ -178,6 +184,12 @@
         ],
         "summary": "Update a user",
         "responses": {
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/UpdateUserPasswordResponseError"
+            },
+            "description": "Bad Request"
+          },
           "205": {
             "schema": {
               "$ref": "#/definitions/UpdateUserPasswordResponse"
@@ -225,6 +237,12 @@
         ],
         "summary": "Update a user",
         "responses": {
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/UpdateUserNameResponseError"
+            },
+            "description": "Bad Request"
+          },
           "205": {
             "schema": {
               "$ref": "#/definitions/UpdateUserNameResponse"
@@ -338,6 +356,12 @@
         ],
         "summary": "Create session",
         "responses": {
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/CreateSessionResponseError"
+            },
+            "description": "Bad Request"
+          },
           "200": {
             "schema": {
               "$ref": "#/definitions/CreateSessionResponse"
@@ -402,6 +426,28 @@
       },
       "description": "Managers for the words list"
     },
+    "UpdateUserPasswordResponseError": {
+      "type": "object",
+      "title": "UpdateUserPasswordResponseError",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The user updated"
+        }
+      },
+      "example": {
+        "password_confirmation1": "can't be blank",
+        "password_confirmation": "does not match confirmation",
+        "password2": "has invalid format",
+        "password1": "can't be blank",
+        "id2": "User not found",
+        "id1": "can't be blank"
+      },
+      "description": "Response schema of a single user"
+    },
     "UpdateUserPasswordResponse": {
       "type": "object",
       "title": "ShowUserResponse",
@@ -443,6 +489,24 @@
         "password": "Qwerty2021"
       },
       "description": "Request params to update the password of a user"
+    },
+    "UpdateUserNameResponseError": {
+      "type": "object",
+      "title": "UpdateUserNameResponseError",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The user updated"
+        }
+      },
+      "example": {
+        "id2": "User not found",
+        "id1": "can't be blank"
+      },
+      "description": "Response schema of a single user"
     },
     "UpdateUserNameResponse": {
       "type": "object",
@@ -499,14 +563,16 @@
         }
       },
       "example": {
-        "user": {
-          "name": "Juan",
-          "lastname": "Rincón",
-          "id": 1,
-          "email": "juan@cordage.io",
-          "admin": false,
-          "active": false
-        }
+        "users": [
+          {
+            "name": "Juan",
+            "lastname": "Rincón",
+            "id": 1,
+            "email": "juan@cordage.io",
+            "admin": false,
+            "active": false
+          }
+        ]
       },
       "description": "Response schema of the user created"
     },
@@ -604,6 +670,24 @@
         "email": "juan@cordage.io"
       },
       "description": "Request params to found a user to send email to reset password"
+    },
+    "DeleteUserResponseError": {
+      "type": "object",
+      "title": "DeleteUserResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The user deleted"
+        }
+      },
+      "example": {
+        "id2": "User not found",
+        "id1": "can't be blank"
+      },
+      "description": "Response schema of a single user"
     },
     "DeleteUserResponse": {
       "type": "object",
@@ -740,6 +824,27 @@
         "email": "juan@cordage.io"
       },
       "description": "POST body for creating a user"
+    },
+    "CreateSessionResponseError": {
+      "type": "object",
+      "title": "CreateSessionResponse",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/User"
+          },
+          "description": "The users details"
+        }
+      },
+      "example": {
+        "error5": "password can't be blank",
+        "error4": "email can't be blank",
+        "error3": "inactive account",
+        "error2": "wrong password",
+        "error1": "user not found"
+      },
+      "description": "Response and id"
     },
     "CreateSessionResponse": {
       "type": "object",
