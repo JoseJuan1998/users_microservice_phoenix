@@ -21,7 +21,7 @@ defmodule Hangman.MixProject do
   def application do
     [
       mod: {Hangman.Application, []},
-      extra_applications: [:logger, :runtime_tools, :amqp, :bamboo]
+      extra_applications: [:logger, :runtime_tools, :bamboo]
     ]
   end
 
@@ -45,7 +45,6 @@ defmodule Hangman.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:amqp, "~> 3.0"},
       {:phoenix_swagger, "~> 0.8.3"},
       {:ex_json_schema, "~> 0.7.1"},
       {:poison, "~> 3.0"},

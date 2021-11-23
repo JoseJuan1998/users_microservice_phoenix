@@ -4,7 +4,7 @@ import Config
 config :hangman, Hangman.Repo,
   username: "postgres",
   password: "postgres",
-  database: "hangman_dev",
+  database: "users_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10

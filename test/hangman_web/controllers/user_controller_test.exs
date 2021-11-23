@@ -26,7 +26,7 @@ defmodule HangmanWeb.UserControllerTest do
     end
   end
 
-  describe "[GET] /users:" do
+  describe "[GET] /users/:np/:nr:" do
 
     setup do
       conn = build_conn()

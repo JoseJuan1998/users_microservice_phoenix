@@ -25,14 +25,12 @@ defmodule Hangman.Accounts.Credential do
     |> get_credential()
   end
 
-  defp get_credential(changeset) do
-    case changeset.valid? do
-      true ->
-        case Repo.get(__MODULE__, get_field(changeset, :id)) do
-          nil -> add_error(changeset, :id, "Credential not found")
-          credential -> credential |> Repo.preload(:user)
-        end
-      false -> changeset
+  defp get_credential(%{valid?: false} = changeset), do: changeset
+
+  defp get_credential(%{valid?: true} = changeset) do
+    case Repo.get(__MODULE__, get_field(changeset, :id)) do
+      nil -> add_error(changeset, :id, "Credential not found")
+      credential -> credential |> Repo.preload(:user)
     end
   end
 
@@ -43,14 +41,12 @@ defmodule Hangman.Accounts.Credential do
     |> get_credential_email()
   end
 
-  defp get_credential_email(changeset) do
-    case changeset.valid? do
-      true ->
-        case Repo.get_by(__MODULE__, email: get_field(changeset, :email)) do
-          nil -> add_error(changeset, :email, "Credential not found")
-          credential -> credential |> Repo.preload(:user)
-        end
-      false -> changeset
+  defp get_credential_email(%{valid?: false} = changeset), do: changeset
+
+  defp get_credential_email(%{valid?: true} = changeset) do
+    case Repo.get_by(__MODULE__, email: get_field(changeset, :email)) do
+      nil -> add_error(changeset, :email, "Credential not found")
+      credential -> credential |> Repo.preload(:user)
     end
   end
 

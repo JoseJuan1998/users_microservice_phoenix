@@ -10,14 +10,14 @@ defmodule HangmanWeb.Router do
     ]
     plug :accepts, ["json"]
     plug HangmanWeb.Authenticate
-    plug :fetch_session
   end
 
   scope "/manager", HangmanWeb do
-    pipe_through [:api]
+    pipe_through :api
 
     options "/", OptionsController, :options
     options "/users/:id", OptionsController, :options
+    options "/users/:np/:nr", OptionsController, :options
     options "/users", OptionsController, :options
     options "/users/pass/:id", OptionsController, :options
     # coveralls-ignore-start

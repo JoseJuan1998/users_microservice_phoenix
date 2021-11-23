@@ -13,7 +13,7 @@ defmodule Hangman.Accounts.User do
   end
 
   @doc false
-  def get_changeset(attrs) do
+  defp get_changeset(attrs) do
     %__MODULE__{}
     |> cast(attrs, [:id])
     |> validate_required([:id])
@@ -34,6 +34,8 @@ defmodule Hangman.Accounts.User do
     |> cast(attrs, [:name, :lastname])
     |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.create_changeset/2)
     |> validate_required([:name, :lastname, :credential])
+    |> validate_format(:name, ~r{^[a-zA-ZÀ-ÿ ]+$})
+    |> validate_format(:lastname, ~r{^[a-zA-ZÀ-ÿ ]+$})
   end
 
   def found_changeset(attrs) do
