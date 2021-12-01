@@ -5,14 +5,14 @@ Project Users {
     **Database for users service**
   '''
 }
-Table user {
+Table users {
   id int [pk, increment]
   name varchar
   created_at varchar [note: 'When user created']
   updated_at varchar [note: 'When user updated']
   note: "table 'users' contains user information"
 }
-Table credential {
+Table credentials {
   id int [pk, increment]
   email varchar [not null, unique]
   password_hash varchar
@@ -21,6 +21,13 @@ Table credential {
   user_id int [not null, unique]
   created_at varchar [note: 'When credential created']
   updated_at varchar [note: 'When credential updated']
-  note: "table 'credential' contains user credential"
+  note: "table 'credentials' contains user credential"
 }
-Ref: credential.user_id > user.id
+Table email_tokens {
+  id int [pk, increment]
+  token varchar [not null, unique]
+  created_at varchar [note: 'When token created']
+  updated_at varchar [note: 'When token updated']
+  note: "table 'email_tokens' contains active tokens from email requests"
+}
+Ref: credentials.user_id > users.id

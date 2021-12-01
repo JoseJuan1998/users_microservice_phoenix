@@ -114,7 +114,7 @@ defmodule HangmanWeb.UserControllerTest do
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
         |> get(Routes.user_path(conn, :get_user, 0))
-        |> json_response(400)
+        |> json_response(404)
 
       assert %{
         "id" => _id
@@ -257,7 +257,7 @@ defmodule HangmanWeb.UserControllerTest do
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_name))
-        |> json_response(400)
+        |> json_response(404)
 
       assert %{
         "id" => _id,
@@ -272,7 +272,7 @@ defmodule HangmanWeb.UserControllerTest do
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_name, :id, %{name: "Juan"}))
-        |> json_response(400)
+        |> json_response(404)
 
       assert %{
         "id" => _id
@@ -286,7 +286,7 @@ defmodule HangmanWeb.UserControllerTest do
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_name, 0, %{name: "Juan"}))
-        |> json_response(400)
+        |> json_response(404)
 
       assert %{
         "id" => _id
@@ -321,7 +321,7 @@ defmodule HangmanWeb.UserControllerTest do
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_password, :id, %{password: "Qwerty", password_confirmation: "Qwerty2021"}))
-        |> json_response(400)
+        |> json_response(404)
 
       assert %{
         "id" => _id
@@ -329,13 +329,13 @@ defmodule HangmanWeb.UserControllerTest do
     end
 
     test "Error when 'id' is wrong for password" do
-      
+
       conn = build_conn()
       response =
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
         |> put(Routes.user_path(conn, :update_password, 0, %{password: "Qwerty", password_confirmation: "Qwerty2021"}))
-        |> json_response(400)
+        |> json_response(404)
 
       assert %{
         "id" => _id
@@ -492,7 +492,7 @@ defmodule HangmanWeb.UserControllerTest do
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
         |> delete(Routes.user_path(conn, :delete_user))
-        |> json_response(400)
+        |> json_response(404)
 
       assert %{
         "id" => _id
@@ -505,7 +505,7 @@ defmodule HangmanWeb.UserControllerTest do
         conn
         |> put_req_header("authorization", Token.auth_sign(1))
         |> delete(Routes.user_path(conn, :delete_user, 0))
-        |> json_response(400)
+        |> json_response(404)
 
       assert %{
         "id" => _id
