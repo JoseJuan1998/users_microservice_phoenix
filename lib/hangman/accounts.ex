@@ -5,6 +5,10 @@ defmodule Hangman.Accounts do
   alias Hangman.Accounts.User
   alias Hangman.Accounts.EmailToken
 
+  def count_users() do
+    Repo.one(from u in User, select: count(u))
+  end
+
   def list_users(attrs \\ %{}) do
     query = cond do
       not is_nil(attrs["np"]) and not is_nil(attrs["nr"]) ->

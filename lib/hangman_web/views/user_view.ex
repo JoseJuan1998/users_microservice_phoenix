@@ -5,8 +5,8 @@ defmodule HangmanWeb.UserView do
     %{user: render("single_user.json", %{user: user})}
   end
 
-  def render("users.json", %{users: users}) do
-    %{users: render_many(users, HangmanWeb.UserView,"single_user.json")}
+  def render("users.json", %{users: users, count: count}) do
+    %{count: count, users: render_many(users, HangmanWeb.UserView,"single_user.json")}
   end
 
   def render("single_user.json", %{user: user}) do
