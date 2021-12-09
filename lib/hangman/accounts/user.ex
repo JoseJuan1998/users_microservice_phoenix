@@ -36,7 +36,28 @@ defmodule Hangman.Accounts.User do
     |> validate_required([:name, :lastname, :credential])
     |> validate_format(:name, ~r{^[a-zA-ZÀ-ÿ ]+$})
     |> validate_format(:lastname, ~r{^[a-zA-ZÀ-ÿ ]+$})
+    |> setup_spaces()
   end
+
+  defp setup_spaces(%{valid?: false} = changeset), do: changeset
+
+  defp setup_spaces(%{valid?: true, changes: %{name: name, lastname: lastname}} = changeset) do
+    changeset
+    |> put_change(:name, String.trim(name))
+    |> put_change(:lastname, String.trim(lastname))
+  end
+
+  defp setup_spaces(%{valid?: true, changes: %{name: name}} = changeset) do
+    changeset
+    |> put_change(:name, String.trim(name))
+  end
+
+  defp setup_spaces(%{valid?: true, changes: %{lastname: lastname}} = changeset) do
+    changeset
+    |> put_change(:lastname, String.trim(lastname))
+  end
+
+  defp setup_spaces(%{valid?: true} = changeset), do: changeset
 
   def found_changeset(attrs) do
     attrs
@@ -48,6 +69,9 @@ defmodule Hangman.Accounts.User do
     |> get_changeset()
     |> cast(attrs, [:name, :lastname])
     |> validate_required([:name, :lastname])
+    |> validate_format(:name, ~r{^[a-zA-ZÀ-ÿ ]+$})
+    |> validate_format(:lastname, ~r{^[a-zA-ZÀ-ÿ ]+$})
+    |> setup_spaces()
   end
 
   def delete_changeset(attrs) do

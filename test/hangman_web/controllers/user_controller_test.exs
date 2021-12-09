@@ -250,6 +250,27 @@ defmodule HangmanWeb.UserControllerTest do
         } = response
     end
 
+    test "Returns the user lastname updated", %{params: params} do
+
+      conn = build_conn()
+      response =
+        conn
+        |> put_req_header("authorization", Token.auth_sign(1))
+        |> put(Routes.user_path(conn, :update_name, params["user"]["id"], %{lastname: " Rincón"}))
+        |> json_response(205)
+
+      assert %{
+        "user" => %{
+          "active" => _active,
+          "admin" => _admin,
+          "email" => _email,
+          "id" => _id,
+          "name" => _name,
+          "lastname" => _lastname
+        }
+        } = response
+    end
+
     test "Error when 'params' is empty for name" do
 
       conn = build_conn()
