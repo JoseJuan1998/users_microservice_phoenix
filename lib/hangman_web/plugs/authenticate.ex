@@ -45,7 +45,7 @@ defmodule HangmanWeb.Authenticate do
         case Accounts.delete_email_token(%{"token" => token}) do
           {:ok, token} ->
             # coveralls-ignore-start
-            case Token.verify_email(token) do
+            case Token.verify_email(token.token) do
               {:ok, user_id} -> {:ok, user_id}
               _unauthorized -> {:error, :invalid}
             end
