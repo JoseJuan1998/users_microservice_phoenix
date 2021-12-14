@@ -307,7 +307,7 @@ defmodule HangmanWeb.UserController do
     users = Accounts.list_users(params)
     case users != [] do
       true ->
-        count = Accounts.count_users()
+        count = Accounts.count_users(params)
         conn
         |> put_status(200)
         |> render("users.json", %{count: count, users: users})
