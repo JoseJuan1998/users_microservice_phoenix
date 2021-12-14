@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "paths": {
-    "/manager/users/{np}/{nr}": {
+    "/manager/users/{np}/{nr}?char={char}": {
       "get": {
         "tags": [
           "User"
@@ -45,6 +45,13 @@
             "name": "nr",
             "in": "path",
             "description": "The rows per page"
+          },
+          {
+            "type": "string",
+            "required": false,
+            "name": "char",
+            "in": "path",
+            "description": "The user you want to find"
           }
         ],
         "operationId": "HangmanWeb.UserController.get_users",

@@ -9,10 +9,26 @@ defmodule Hangman.Accounts do
     Repo.one(from u in User, select: count(u))
   end
 
+  # def list_users(attrs \\ %{}) do
+  #   query = cond do
+  #     not is_nil(attrs["np"]) and not is_nil(attrs["nr"]) ->
+  #       from u in User, offset: ^((String.to_integer(attrs["np"]) - 1) * String.to_integer(attrs["nr"])), limit: ^attrs["nr"], select: u
+  #     true ->
+  #       from u in User, offset: 0, limit: 0, select: u
+  #   end
+  #   Repo.all(query)
+  #   |> Repo.preload(:credential)
+  # end
+
   def list_users(attrs \\ %{}) do
     query = cond do
       not is_nil(attrs["np"]) and not is_nil(attrs["nr"]) ->
-        from u in User, offset: ^((String.to_integer(attrs["np"]) - 1) * String.to_integer(attrs["nr"])), limit: ^attrs["nr"], select: u
+        cond do
+          not is_nil(attrs["char"]) ->
+            from u in User, join: c in Credential, on: u.id == c.user_id, where: like(fragment("upper(?)", u.name), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)",u.lastname), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)", c.email), ^"%#{String.trim(String.upcase(attrs["char"]))}%"), offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+          true ->
+            from u in User, offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+        end
       true ->
         from u in User, offset: 0, limit: 0, select: u
     end
