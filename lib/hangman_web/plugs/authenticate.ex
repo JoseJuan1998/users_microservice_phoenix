@@ -11,7 +11,7 @@ defmodule HangmanWeb.Authenticate do
     |> get_token()
     |> verify_token()
     |> case do
-      {:ok, user_id} -> assign(conn, :current_user, user_id)
+      {:ok, user} -> assign(conn, :current_user, user.user_id)
       _unauthorized -> assign(conn, :current_user, nil)
     end
   end
@@ -40,13 +40,13 @@ defmodule HangmanWeb.Authenticate do
 
   defp verify_token(token) do
     case Token.verify_auth(token) do
-      {:ok, user_id} -> {:ok, user_id}
+      {:ok, user} -> {:ok, user}
       _unauthorized ->
         case Accounts.delete_email_token(%{"token" => token}) do
           {:ok, token} ->
             # coveralls-ignore-start
             case Token.verify_email(token.token) do
-              {:ok, user_id} -> {:ok, user_id}
+              {:ok, user} -> {:ok, user}
               _unauthorized -> {:error, :invalid}
             end
             # coveralls-ignore-stop

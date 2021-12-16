@@ -366,7 +366,8 @@ defmodule HangmanWeb.UserController do
 
     case Accounts.create_user(user_params) do
       {:ok, user} ->
-        token = Token.email_sign(user.id)
+        user_params = %{user_id: user.id, email: user.credential.email}
+        token = Token.email_sign(user_params)
         Accounts.create_email_token(%{"token" => token})
         Email.user_added_email(user, token)
         conn
@@ -454,7 +455,8 @@ defmodule HangmanWeb.UserController do
    case Accounts.reset_password(params) do
       %Credential{} = cred ->
         user = cred.user |> Repo.preload(:credential)
-        token = Token.email_sign(user.id)
+        user_params = %{user_id: user.id, email: user.credential.email}
+        token = Token.email_sign(user_params)
         Accounts.create_email_token(%{"token" => token})
         Email.user_reset_password(user, token)
         conn
