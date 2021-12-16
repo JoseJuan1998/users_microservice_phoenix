@@ -287,7 +287,7 @@ defmodule HangmanWeb.UserController do
   end
 
   swagger_path :get_users do
-    get("/manager/users/{np}/{nr}?char={char}")
+    get("/manager/users/{np}/{nr}?char={char}&field={field}&order={order}")
     summary("All Users")
     description("Return JSON with all users listed in the database")
     parameters do
@@ -295,6 +295,8 @@ defmodule HangmanWeb.UserController do
       np :path, :string, "The current page", required: true
       nr :path, :string, "The rows per page", required: true
       char :path, :string, "The user you want to find", required: false
+      field :path, :string, "The field you want to sort", required: false
+      order :path, :string, "The order you want to sort", required: false
     end
     produces("application/json")
     deprecated(false)

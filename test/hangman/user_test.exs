@@ -71,6 +71,51 @@ defmodule Hangman.UserTest do
       assert users != []
     end
 
+    test "Return all users ordered ASC by name" do
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5", "field" => "name", "order" => "asc"})
+      assert users != []
+    end
+
+    test "Return all users ordered DESC by name" do
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5", "field" => "name", "order" => "desc"})
+      assert users != []
+    end
+
+    test "Return all users ordered ASC by lastname" do
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5", "field" => "lastname", "order" => "asc"})
+      assert users != []
+    end
+
+    test "Return all users ordered DESC by lastname" do
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5", "field" => "lastname", "order" => "desc"})
+      assert users != []
+    end
+
+    test "Return all users ordered ASC by email" do
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5", "field" => "email", "order" => "asc"})
+      assert users != []
+    end
+
+    test "Return all users ordered DESC by email" do
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5", "field" => "email", "order" => "desc"})
+      assert users != []
+    end
+
+    test "Return all users where field is wrong" do
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5", "field" => "password", "order" => "desc"})
+      assert users != []
+    end
+
+    test "Return all users where order is wrong" do
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5", "field" => "name", "order" => "asdf"})
+      assert users != []
+    end
+
+    test "Return all users where order is wrong in email field" do
+      users = Accounts.list_users(%{"np" => "1", "nr" => "5", "field" => "email", "order" => "asdf"})
+      assert users != []
+    end
+
     test "Error when 'users' is empty"do
       users = Accounts.list_users()
       assert users == []
@@ -196,7 +241,7 @@ defmodule Hangman.UserTest do
       {:ok, user: got_user}
     end
 
-    test "Return user founded and received de email", %{user: user} do
+    test "Return user founded and received de email" do
       cred = Accounts.reset_password(%{email: "pedro@cordage.io"})
       assert not is_nil(cred)
     end

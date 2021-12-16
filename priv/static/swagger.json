@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "paths": {
-    "/manager/users/{np}/{nr}?char={char}": {
+    "/manager/users/{np}/{nr}?char={char}&field={field}&order={order}": {
       "get": {
         "tags": [
           "User"
@@ -52,6 +52,20 @@
             "name": "char",
             "in": "path",
             "description": "The user you want to find"
+          },
+          {
+            "type": "string",
+            "required": false,
+            "name": "field",
+            "in": "path",
+            "description": "The field you want to sort"
+          },
+          {
+            "type": "string",
+            "required": false,
+            "name": "order",
+            "in": "path",
+            "description": "The order you want to sort"
           }
         ],
         "operationId": "HangmanWeb.UserController.get_users",

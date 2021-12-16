@@ -18,12 +18,7 @@ defmodule Hangman.Accounts do
   def list_users(attrs \\ %{}) do
     query = cond do
       not is_nil(attrs["np"]) and not is_nil(attrs["nr"]) ->
-        cond do
-          not is_nil(attrs["char"]) ->
-            from u in User, join: c in Credential, on: u.id == c.user_id, where: like(fragment("upper(?)", u.name), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)",u.lastname), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)", c.email), ^"%#{String.trim(String.upcase(attrs["char"]))}%"), offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
-          true ->
-            from u in User, offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
-        end
+        get_pagination(attrs)
       true ->
         from u in User, offset: 0, limit: 0, select: u
     end
@@ -71,28 +66,10 @@ defmodule Hangman.Accounts do
   end
 
   def authenticate_by_email_password(email, given_password) do
-
     cond do
       not is_nil(email) ->
         cred = Repo.get_by(Credential, email: email) |> Repo.preload(:user)
-        cond do
-          cred && cred.active ->
-            cond do
-              not is_nil(given_password) ->
-                cond do
-                  Argon2.verify_pass(given_password, cred.password_hash) ->
-                    {:ok, cred.user}
-                  true ->
-                    {:error, :unauthorized}
-                end
-              true ->
-                {:error, :not_password}
-            end
-          cred ->
-            {:error, :not_active}
-          true ->
-            {:error, :not_found}
-        end
+        authenticate_active(cred, given_password)
       true ->
         {:error, :not_email}
     end
@@ -108,5 +85,80 @@ defmodule Hangman.Accounts do
     attrs
     |> EmailToken.delete_changeset()
     |> Repo.delete()
+  end
+
+  defp get_pagination(attrs) do
+    cond do
+      not is_nil(attrs["char"]) ->
+        from u in User, join: c in Credential, on: u.id == c.user_id, where: like(fragment("upper(?)", u.name), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)",u.lastname), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)", c.email), ^"%#{String.trim(String.upcase(attrs["char"]))}%"), offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+      not is_nil(attrs["field"]) and not is_nil(attrs["order"]) ->
+        get_field(attrs)
+      true ->
+        from u in User, order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+    end
+  end
+
+  defp get_field(attrs) do
+    case String.to_atom(String.downcase(attrs["field"])) do
+      :name ->
+        get_sorting(attrs)
+      :lastname ->
+        get_sorting(attrs)
+      :email ->
+        get_sorting_email(attrs)
+      _other ->
+        from u in User, order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+    end
+  end
+
+  defp get_sorting(attrs) do
+    case String.to_atom(String.upcase(attrs["order"])) do
+      :ASC ->
+        from u in User, order_by: ^[asc: String.to_atom(String.downcase(attrs["field"]))], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+      :DESC ->
+        from u in User, order_by: ^[desc: String.to_atom(String.downcase(attrs["field"]))],offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+      _other ->
+        from u in User, order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+    end
+  end
+
+  defp get_sorting_email(attrs) do
+    case String.to_atom(String.upcase(attrs["order"])) do
+      :ASC ->
+        from c in Credential, join: u in User, on: u.id == c.user_id, order_by: ^[asc: String.to_atom(String.downcase(attrs["field"]))], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+      :DESC ->
+        from c in Credential, join: u in User, on: u.id == c.user_id, order_by: ^[desc: String.to_atom(String.downcase(attrs["field"]))], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+      _other ->
+        from u in User, order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+    end
+  end
+
+  defp authenticate_active(cred, given_password) do
+    cond do
+      cred && cred.active ->
+        authenticate_password(cred, given_password)
+      cred ->
+        {:error, :not_active}
+      true ->
+        {:error, :not_found}
+    end
+  end
+
+  defp authenticate_password(cred, given_password) do
+    cond do
+      not is_nil(given_password) ->
+        authenticate_login(cred, given_password)
+      true ->
+        {:error, :not_password}
+    end
+  end
+
+  defp authenticate_login(cred, given_password) do
+    cond do
+      Argon2.verify_pass(given_password, cred.password_hash) ->
+        {:ok, cred.user}
+      true ->
+        {:error, :unauthorized}
+    end
   end
 end
