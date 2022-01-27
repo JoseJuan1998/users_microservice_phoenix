@@ -52,7 +52,7 @@ config :hangman, HangmanWeb.Endpoint,
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 
-config :hangman, Hangman.Email, adapter: Bamboo.LocalAdapter
+# config :hangman, Hangman.Email, adapter: Bamboo.LocalAdapter
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.
