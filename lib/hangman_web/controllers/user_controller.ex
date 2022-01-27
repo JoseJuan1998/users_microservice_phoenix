@@ -5,15 +5,10 @@ defmodule HangmanWeb.UserController do
   alias Hangman.Accounts.{User, Credential}
   alias Hangman.Email
   alias Hangman.Repo
-  alias Hangman.Token
   import Plug.Conn.Status, only: [code: 1]
   use PhoenixSwagger
 
   action_fallback HangmanWeb.UserErrorController
-
-  plug :authenticate_api_email_user when action in [:update_password]
-
-  plug :authenticate_api_user when action in [:get_users, :get_user, :create_user, :update_name, :delete_user]
 
   # coveralls-ignore-start
   def swagger_definitions do
@@ -365,18 +360,14 @@ defmodule HangmanWeb.UserController do
 
   def create_user(conn, params) do
     user_params = %{"name" => params["name"], "lastname" => params["lastname"], "credential" => %{ "email" => params["email"]}}
-
-    case Accounts.create_user(user_params) do
-      {:ok, user} ->
-        user_params = %{user_id: user.id, email: user.credential.email}
-        token = Token.email_sign(user_params)
-        Accounts.create_email_token(%{"token" => token})
-        Email.user_added_email(user, token)
-        conn
+    with {:ok, token, user}  <- HangmanWeb.Auth.Guardian.email_authenticate_activate(user_params) do
+      Accounts.create_email_token(%{"token" => token})
+      {:ok, pid} = Task.Supervisor.start_link()
+      task = Task.Supervisor.async(pid, fn -> Email.user_added_email(user, token) end)
+      Task.await(task)
+      conn
         |> put_status(201)
         |> render("user.json", %{user: user})
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:error, changeset}
     end
   end
 
@@ -427,12 +418,17 @@ defmodule HangmanWeb.UserController do
   #coveralls-ignore-stop
 
   def update_password(conn, params) do
+    ["Bearer " <> token] = get_req_header(conn, "authorization")
     case Accounts.update_password(params) do
       {:ok, cred} ->
-        user = cred.user |> Repo.preload(:credential)
-        conn
-        |> put_status(205)
-        |> render("user.json", %{user: user})
+        case Accounts.delete_email_token(%{"token" => token}) do
+          {:ok, _token} ->
+            user = cred.user |> Repo.preload(:credential)
+            conn
+            |> put_status(205)
+            |> render("user.json", %{user: user})
+          _ -> {:error, "Try again later"}
+        end
       {:error, %Ecto.Changeset{} = changeset} -> {:error, changeset}
     end
   end
@@ -454,19 +450,15 @@ defmodule HangmanWeb.UserController do
   # coveralls-ignore-stop
 
   def send_reset_password(conn, params) do
-   case Accounts.reset_password(params) do
-      %Credential{} = cred ->
-        user = cred.user |> Repo.preload(:credential)
-        user_params = %{user_id: user.id, email: user.credential.email}
-        token = Token.email_sign(user_params)
-        Accounts.create_email_token(%{"token" => token})
-        Email.user_reset_password(user, token)
-        conn
+    with {:ok, token, user}  <- HangmanWeb.Auth.Guardian.email_authenticate_password(params) do
+      Accounts.create_email_token(%{"token" => token})
+      {:ok, pid} = Task.Supervisor.start_link()
+      task = Task.Supervisor.async(pid, fn -> Email.user_reset_password(user |> Repo.preload(:credential), token) end)
+      Task.await(task)
+      conn
         |> put_status(205)
-        |> render("user.json", %{user: user})
-      %Ecto.Changeset{} = changeset ->
-        {:error, changeset}
-   end
+        |> render("user.json", %{user: user |> Repo.preload(:credential)})
+    end
   end
 
   # coveralls-ignore-start

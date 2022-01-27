@@ -9,23 +9,25 @@ defmodule HangmanWeb.Router do
       "http://hangmangame1.eastatus.cloudapp.azure.com:3000"
     ]
     plug :accepts, ["json"]
-    plug HangmanWeb.Authenticate
+  end
+
+  pipeline :auth do
+    plug HangmanWeb.Auth.PipelineAccess
+  end
+
+  pipeline :email_auth do
+    plug HangmanWeb.Auth.PipelineEmail
   end
 
   scope "/manager", HangmanWeb do
-    pipe_through :api
+    pipe_through [:api, :email_auth]
 
-    options "/", OptionsController, :options
-    options "/users/:id", OptionsController, :options
-    options "/users/:np/:nr", OptionsController, :options
-    options "/users", OptionsController, :options
-    # coveralls-ignore-start
-    options "/users/pass/:id", OptionsController, :options
-    options "/users/pass", OptionsController, :options
-    options "/users/name/:id", OptionsController, :options
-    options "/users/name", OptionsController, :options
-    options "/users/reset/pass", OptionsController, :options
-    # coveralls-ignore-stop
+    put "/users/pass/:id", UserController, :update_password
+    put "/users/pass", UserController, :update_password
+  end
+
+  scope "/manager", HangmanWeb do
+    pipe_through [:api, :auth]
 
     get "/users/:id", UserController, :get_user
     get "/users", UserController, :get_users
@@ -33,15 +35,28 @@ defmodule HangmanWeb.Router do
     post "/users", UserController, :create_user
     put "/users/name/:id", UserController, :update_name
     put "/users/name", UserController, :update_name
-    put "/users/pass/:id", UserController, :update_password
-    put "/users/pass", UserController, :update_password
-    post "/users/reset/pass", UserController, :send_reset_password
     delete "/users/:id", UserController, :delete_user
     delete "/users", UserController, :delete_user
+  end
 
+  scope "/manager", HangmanWeb do
+    pipe_through :api
+
+    options "/", OptionsController, :options
     options "/login", OptionsController, :options
     options "/logout", OptionsController, :options
+    options "/users/reset/pass", OptionsController, :options
+    options "/users/:id", OptionsController, :options
+    options "/users/:np/:nr", OptionsController, :options
+    options "/users", OptionsController, :options
+    # coveralls-ignore-start
+    options "/users/name/:id", OptionsController, :options
+    options "/users/name", OptionsController, :options
+    options "/users/pass/:id", OptionsController, :options
+    options "/users/pass", OptionsController, :options
+    # coveralls-ignore-stop
 
+    post "/users/reset/pass", UserController, :send_reset_password
     post "/login", SessionController, :create_session
     delete "/logout", SessionController, :delete_session
   end

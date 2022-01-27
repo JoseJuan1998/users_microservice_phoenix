@@ -8,7 +8,7 @@ defmodule Hangman.Accounts do
   def count_users(attrs \\ %{}) do
     query = cond do
       not is_nil(attrs["char"]) ->
-        from u in User, join: c in Credential, on: u.id == c.user_id, where: like(fragment("upper(?)", u.name), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)",u.lastname), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)", c.email), ^"%#{String.trim(String.upcase(attrs["char"]))}%"), select: count(u)
+        from u in search(attrs), select: count(u)
       true ->
         from u in User, select: count(u)
     end
@@ -65,16 +65,6 @@ defmodule Hangman.Accounts do
     |> User.create_changeset(attrs)
   end
 
-  def authenticate_by_email_password(email, given_password) do
-    cond do
-      not is_nil(email) ->
-        cred = Repo.get_by(Credential, email: email) |> Repo.preload(:user)
-        authenticate_active(cred, given_password)
-      true ->
-        {:error, :not_email}
-    end
-  end
-
   def create_email_token(attrs \\ %{}) do
     attrs
     |> EmailToken.create_changeset()
@@ -90,11 +80,11 @@ defmodule Hangman.Accounts do
   defp get_pagination(attrs) do
     cond do
       not is_nil(attrs["char"]) ->
-        from u in User, join: c in Credential, on: u.id == c.user_id, where: like(fragment("upper(?)", u.name), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)",u.lastname), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)", c.email), ^"%#{String.trim(String.upcase(attrs["char"]))}%"), offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+        from u in search(attrs), order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
       not is_nil(attrs["field"]) and not is_nil(attrs["order"]) ->
         get_field(attrs)
       true ->
-        from u in User, order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+        from u in paginate(attrs), select: u
     end
   end
 
@@ -106,30 +96,37 @@ defmodule Hangman.Accounts do
         get_sorting(attrs)
       :email ->
         get_sorting_email(attrs)
-      _other ->
-        from u in User, order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+      _other -> paginate(attrs)
     end
   end
 
   defp get_sorting(attrs) do
     case String.to_atom(String.upcase(attrs["order"])) do
       :ASC ->
-        from u in User, order_by: ^[asc: String.to_atom(String.downcase(attrs["field"]))], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+        sort(:asc, attrs)
       :DESC ->
-        from u in User, order_by: ^[desc: String.to_atom(String.downcase(attrs["field"]))],offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
-      _other ->
-        from u in User, order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+        sort(:desc, attrs)
+      _other -> from u in paginate(attrs), select: u
     end
   end
 
   defp get_sorting_email(attrs) do
     case String.to_atom(String.upcase(attrs["order"])) do
       :ASC ->
-        from c in Credential, join: u in User, on: u.id == c.user_id, order_by: ^[asc: String.to_atom(String.downcase(attrs["field"]))], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+        sort_mail(:asc, attrs)
       :DESC ->
-        from c in Credential, join: u in User, on: u.id == c.user_id, order_by: ^[desc: String.to_atom(String.downcase(attrs["field"]))], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
-      _other ->
-        from u in User, order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+        sort_mail(:desc, attrs)
+      _ -> from u in paginate(attrs), select: u
+    end
+  end
+
+  def authenticate_by_email_password(email, given_password) do
+    cond do
+      not is_nil(email) ->
+        cred = Repo.get_by(Credential, email: email) |> Repo.preload(:user)
+        authenticate_active(cred, given_password)
+      true ->
+        {:error, :not_email}
     end
   end
 
@@ -160,5 +157,22 @@ defmodule Hangman.Accounts do
       true ->
         {:error, :unauthorized}
     end
+  end
+
+  defp search(attrs) do
+    from u in User, join: c in Credential, on: u.id == c.user_id, where: like(fragment("upper(?)", u.name), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)",u.lastname), ^"%#{String.trim(String.upcase(attrs["char"]))}%") or like(fragment("upper(?)", c.email), ^"%#{String.trim(String.upcase(attrs["char"]))}%")
+  end
+
+  defp sort_mail(order, attrs) do
+    # from c in Credential, join: u in assoc(c, :user), order_by: ^Keyword.new([{order, String.to_atom(String.downcase(attrs["field"]))}]), offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], preload: [user: u]
+    from c in Credential, join: u in User, on: u.id == c.user_id, order_by: ^Keyword.new([{order, String.to_atom(String.downcase(attrs["field"]))}]), offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+  end
+
+  defp sort(order, attrs) do
+    from u in User, order_by: ^Keyword.new([{order, String.to_atom(String.downcase(attrs["field"]))}]), offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
+  end
+
+  defp paginate(attrs) do
+    from u in User, order_by: [asc: u.name], offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"]
   end
 end

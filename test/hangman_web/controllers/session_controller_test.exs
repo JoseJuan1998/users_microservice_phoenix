@@ -1,6 +1,9 @@
 defmodule HangmanWeb.SessionControllerTest do
   use HangmanWeb.ConnCase
   alias Hangman.Token
+  alias HangmanWeb.Auth.Guardian
+  alias Hangman.Repo
+  alias Hangman.Accounts
 
   setup_all do: []
 
@@ -10,30 +13,31 @@ defmodule HangmanWeb.SessionControllerTest do
 
   describe "[POST] /login:" do
     setup do
+      {:ok, token_auth, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
       connc = build_conn()
       created = connc
-      |> put_req_header("authorization", Token.auth_sign(%{email: "juan@mail.com", user_id: 1}))
+      |> put_req_header("authorization", "Bearer "<>token_auth)
       |> post(Routes.user_path(connc, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
+
+      %{token: token_email} = List.first(Repo.all(Accounts.EmailToken))
       connu = build_conn()
       updated = connu
-      |> put_req_header("authorization", Token.auth_sign(%{email: "juan@mail.com", user_id: 1}))
+      |> put_req_header("authorization", "Bearer "<>token_email)
       |> put(Routes.user_path(connu, :update_password, created["user"]["id"], %{password: "Qwerty2021", password_confirmation: "Qwerty2021"}))
       |> json_response(205)
-
-      {:ok, params: updated}
     end
 
-    test "Returns 'information' of the user logged", %{params: params} do
+    test "Returns 'information' of the user logged" do
       conn = build_conn()
       response =
         conn
-        |> post(Routes.session_path(conn, :create_session, %{email: params["user"]["email"], password: "Qwerty2021"}))
+        |> post(Routes.session_path(conn, :create_session, %{email: "juan@example.com", password: "Qwerty2021"}))
         |> json_response(:ok)
 
       assert %{
-        "token_auth" => _auth,
-        "user_id" => _id
+        "token" => _auth,
+        "user" => _id
       } = response
     end
 
@@ -89,8 +93,9 @@ defmodule HangmanWeb.SessionControllerTest do
   describe "ERROR [POST] /login:" do
     setup do
       connc = build_conn()
+      {:ok, token_auth, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
       created = connc
-      |> put_req_header("authorization", Token.auth_sign(%{email: "juan@mail.com", user_id: 1}))
+      |> put_req_header("authorization", "Bearer "<>token_auth)
       |> post(Routes.user_path(connc, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
       |> json_response(201)
 

@@ -3,7 +3,7 @@ defmodule Hangman.Repo.Migrations.CreateEmailToken do
 
   def change do
     create table(:email_tokens) do
-      add :token, :string
+      add :token, :string, size: 500
 
       timestamps()
     end

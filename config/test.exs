@@ -8,7 +8,7 @@ import Config
 config :hangman, Hangman.Repo,
   username: "postgres",
   password: "postgres",
-  database: "users_test#{System.get_env("MIX_TEST_PARTITION")}",
+  database: "users_guardian_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10

@@ -3,6 +3,7 @@ defmodule HangmanWeb.SessionController do
   alias Hangman.Accounts
   alias Hangman.Repo
   alias Hangman.Token
+  alias HangmanWeb.Auth.Guardian
   import Plug.Conn.Status, only: [code: 1]
   use PhoenixSwagger
 
@@ -92,26 +93,10 @@ defmodule HangmanWeb.SessionController do
   # coveralls-ignore-stop
 
   def create_session(conn, params) do
-      case Accounts.authenticate_by_email_password(params["email"], params["password"]) do
-        {:ok, user} ->
-          user = user |> Repo.preload(:credential)
-          user_params = %{user_id: user.id, email: user.credential.email}
-          conn
-          |> put_status(200)
-          |> assign(:current_user, user.id)
-          |> render("session.json", %{user_id: user.id, token_auth: Token.auth_sign(user_params)})
-        {:error, :unauthorized} ->
-          {:error, "Wrong password"}
-        {:error, :not_found} ->
-          {:error, "User not found"}
-        {:error, :not_active} ->
-          {:error, "Verify your email, check your mailbox"}
-        {:error, :not_password} ->
-          {:error, "Password can't be blank"}
-        {:error, :not_email} ->
-          {:error, "Email can't be blank"}
-        true ->
-          {:error, "Unknown error"}
+      with {:ok, token, user}  <- HangmanWeb.Auth.Guardian.authenticate(params["email"], params["password"]) do
+        conn
+        |> put_status(:ok)
+        |> render("session.json", %{user: user |> Repo.preload(:credential), token: token})
       end
   end
 

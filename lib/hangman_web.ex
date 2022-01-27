@@ -24,7 +24,6 @@ defmodule HangmanWeb do
       import Plug.Conn
       import HangmanWeb.Gettext
       alias HangmanWeb.Router.Helpers, as: Routes
-      import HangmanWeb.Authenticate, only: [authenticate_api_user: 2, authenticate_api_email_user: 2]
     end
   end
 

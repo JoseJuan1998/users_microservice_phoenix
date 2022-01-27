@@ -4,7 +4,7 @@ defmodule Hangman.Accounts.EmailToken do
   alias Hangman.Repo
 
   schema "email_tokens" do
-    field :token, :string
+    field :token, :string, size: 500
 
     timestamps()
   end
@@ -16,16 +16,16 @@ defmodule Hangman.Accounts.EmailToken do
     |> get_token()
   end
 
-  defp get_token(%{valid?: false} = changeset), do: changeset
-
   # coveralls-ignore-start
+  defp get_token(%{valid?: false} = changeset), do: changeset
+  # coveralls-ignore-stop
+
   defp get_token(%{valid?: true} = changeset) do
     case Repo.get_by(__MODULE__, token: get_field(changeset, :token)) do
       nil -> add_error(changeset, :token, "Token not found")
       token -> token
     end
   end
-  # coveralls-ignore-stop
 
   def create_changeset(attrs) do
     %__MODULE__{}

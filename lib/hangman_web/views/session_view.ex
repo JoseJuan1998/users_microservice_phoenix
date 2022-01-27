@@ -1,10 +1,17 @@
 defmodule HangmanWeb.SessionView do
   use HangmanWeb, :view
 
-  def render("session.json", %{user_id: user_id, token_auth: token_auth}) do
+  def render("session.json", %{user: user, token: token}) do
     %{
-      user_id: user_id,
-      token_auth: token_auth
+      user: %{
+        id: user.id,
+        name: user.name,
+        lastname: user.lastname,
+        email: user.credential.email,
+        active: user.credential.active,
+        admin: user.credential.admin
+      },
+      token: token
     }
   end
 end

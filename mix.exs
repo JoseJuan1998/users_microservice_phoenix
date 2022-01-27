@@ -53,8 +53,9 @@ defmodule Hangman.MixProject do
       {:bamboo_phoenix, "~> 1.0.0"},
       {:mime, "~> 1.6"},
       {:argon2_elixir, "~> 2.4"},
-      {:excoveralls, "~> 0.10", only: :test},
-      {:cors_plug, "~> 2.0"}
+      {:excoveralls, "~> 0.14.4", only: :test},
+      {:cors_plug, "~> 2.0"},
+      {:guardian, "~> 2.2"}
     ]
   end
 
