@@ -419,17 +419,21 @@ defmodule HangmanWeb.UserController do
 
   def update_password(conn, params) do
     ["Bearer " <> token] = get_req_header(conn, "authorization")
-    case Accounts.update_password(params) do
-      {:ok, cred} ->
-        case Accounts.delete_email_token(%{"token" => token}) do
-          {:ok, _token} ->
+
+    case Accounts.delete_email_token(%{"token" => token}) do
+      {:ok, _token} ->
+        case Accounts.update_password(params) do
+          {:ok, cred} ->
             user = cred.user |> Repo.preload(:credential)
             conn
             |> put_status(205)
             |> render("user.json", %{user: user})
-          _ -> {:error, "Try again later"}
+          {:error, %Ecto.Changeset{} = changeset} -> {:error, changeset}
         end
-      {:error, %Ecto.Changeset{} = changeset} -> {:error, changeset}
+      _ ->
+        conn
+            |> put_resp_content_type("aplication/json")
+            |> send_resp(401, Jason.encode!(%{error: to_string(:invalid)}))
     end
   end
 

@@ -41,7 +41,7 @@ server: "smtp.sendgrid.net",
 hostname: "smtp.sendgrid.net",
 port: 587,
 username: "apikey",
-password: System.get_env("EMAIL_KEY"),
+password: "${EMAIL_KEY}",
 tls: :if_available,
 allowed_tls_versions: [:"tlsv1", :"tlsv1.1", :"tlsv1.2"],
 ssl: false,
@@ -62,7 +62,7 @@ config :phoenix, :json_library, Jason
 
 config :hangman, HangmanWeb.Auth.Guardian,
   issuer: "hangman",
-  secret_key: System.get_env("GUARDIAN_KEY")
+  secret_key: "${GUARDIAN_KEY}"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

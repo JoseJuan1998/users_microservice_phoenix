@@ -3,8 +3,6 @@ defmodule Hangman.Accounts.Credential do
   import Ecto.Changeset
   alias Hangman.Repo
 
-
-
   schema "credentials" do
     field :email, :string
     field :password_hash, :string

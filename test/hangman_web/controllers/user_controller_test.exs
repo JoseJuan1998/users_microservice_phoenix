@@ -2,6 +2,8 @@ defmodule HangmanWeb.UserControllerTest do
   use HangmanWeb.ConnCase
   alias Hangman.Token
   alias HangmanWeb.Auth.Guardian
+  alias Hangman.Repo
+  alias Hangman.Accounts
 
   setup_all do: []
 
@@ -355,30 +357,41 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Returns the user password updated", %{params: params} do
 
+      %{token: token_email} = List.first(Repo.all(Accounts.EmailToken))
+      conn = build_conn()
+      response =
+        conn
+        |> put_req_header("authorization", "Bearer "<>token_email)
+        |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "Qwerty2021", password_confirmation: "Qwerty2021"}))
+        |> json_response(205)
+
+      assert %{
+        "user" => %{
+          "active" => _active,
+          "admin" => _admin,
+          "email" => _email,
+          "id" => _id,
+          "name" => _name,
+          "lastname" => _lastname
+        }
+        } = response
+    end
+
+    test "Error Token invalid update password", %{params: params} do
+
       {:ok, token, _} = Guardian.test_token_email(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
       conn = build_conn()
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
         |> put(Routes.user_path(conn, :update_password, params["user"]["id"], %{password: "Qwerty2021", password_confirmation: "Qwerty2021"}))
-        |> json_response(400) #it works, just got 400 because of the Token on the DB
-
-      # assert %{
-      #   "user" => %{
-      #     "active" => _active,
-      #     "admin" => _admin,
-      #     "email" => _email,
-      #     "id" => _id,
-      #     "name" => _name,
-      #     "lastname" => _lastname
-      #   }
-      #   } = response
+        |> json_response(401)
     end
 
     test "Error when 'id' is empty for password" do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_email(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      %{token: token} = List.first(Repo.all(Accounts.EmailToken))
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -393,7 +406,7 @@ defmodule HangmanWeb.UserControllerTest do
     test "Error when 'id' is wrong for password" do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_email(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      %{token: token} = List.first(Repo.all(Accounts.EmailToken))
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -408,7 +421,7 @@ defmodule HangmanWeb.UserControllerTest do
     test "Error when 'password' is empty", %{params: params} do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_email(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      %{token: token} = List.first(Repo.all(Accounts.EmailToken))
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -424,7 +437,7 @@ defmodule HangmanWeb.UserControllerTest do
     test "Error when 'password_confirmation' is empty", %{params: params} do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_email(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      %{token: token} = List.first(Repo.all(Accounts.EmailToken))
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -439,7 +452,7 @@ defmodule HangmanWeb.UserControllerTest do
     test "Error when 'password' is invalid format", %{params: params} do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_email(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      %{token: token} = List.first(Repo.all(Accounts.EmailToken))
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -455,7 +468,7 @@ defmodule HangmanWeb.UserControllerTest do
     test "Error when 'password_confirmation' does not match", %{params: params} do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_email(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      %{token: token} = List.first(Repo.all(Accounts.EmailToken))
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
