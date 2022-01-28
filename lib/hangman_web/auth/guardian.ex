@@ -8,7 +8,7 @@ defmodule HangmanWeb.Auth.Guardian do
   def authenticate(email, password) do
     case Accounts.authenticate_by_email_password(email, password) do
       {:ok, user} ->
-        create_token(user)
+        create_token(user, email)
       {:error, :unauthorized} ->
         {:error, "Wrong password"}
       {:error, :not_found} ->
@@ -46,16 +46,16 @@ defmodule HangmanWeb.Auth.Guardian do
     |> Accounts.get_user()}
   end
 
-  def test_token_auth(user) do
-    create_token(user)
+  def test_token_auth(user, email) do
+    create_token(user, email)
   end
 
   def test_token_email(user) do
     create_token_email(user)
   end
 
-  defp create_token(user) do
-   {:ok, token, _claims} = encode_and_sign(user)
+  defp create_token(user, email) do
+   {:ok, token, _claims} = encode_and_sign(user, %{email: email})
    {:ok, token, user}
   end
 

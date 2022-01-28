@@ -13,7 +13,7 @@ defmodule HangmanWeb.SessionControllerTest do
 
   describe "[POST] /login:" do
     setup do
-      {:ok, token_auth, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token_auth, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       connc = build_conn()
       created = connc
       |> put_req_header("authorization", "Bearer "<>token_auth)
@@ -93,7 +93,7 @@ defmodule HangmanWeb.SessionControllerTest do
   describe "ERROR [POST] /login:" do
     setup do
       connc = build_conn()
-      {:ok, token_auth, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token_auth, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       created = connc
       |> put_req_header("authorization", "Bearer "<>token_auth)
       |> post(Routes.user_path(connc, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))

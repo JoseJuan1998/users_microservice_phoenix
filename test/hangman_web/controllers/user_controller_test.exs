@@ -32,7 +32,7 @@ defmodule HangmanWeb.UserControllerTest do
   describe "[GET] /users/:np/:nr:" do
 
     setup do
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       conn = build_conn()
       conn
       |> put_req_header("authorization", "Bearer "<>token)
@@ -42,7 +42,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Returns a list of users" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -63,7 +63,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Returns a list of users matched" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -87,7 +87,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'users' is empty" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -103,7 +103,7 @@ defmodule HangmanWeb.UserControllerTest do
   describe "[GET] /users/:id:" do
 
     setup do
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       conn = build_conn()
       params = conn
       |> put_req_header("authorization", "Bearer "<>token)
@@ -114,7 +114,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Returns one user", %{params: params} do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -138,7 +138,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'id' is wrong" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -156,7 +156,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Returns the user created" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -177,7 +177,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'name' is empty" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -191,7 +191,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'lastname' is empty" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -205,7 +205,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'email' is empty" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -221,7 +221,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'email' is invalid format" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -237,7 +237,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'params' are empty" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -257,7 +257,7 @@ defmodule HangmanWeb.UserControllerTest do
   describe "[PUT] /users/[name, password]/:id:" do
     setup do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       params = conn
       |> put_req_header("authorization", "Bearer "<>token)
       |> post(Routes.user_path(conn, :create_user, %{name: "Juan", lastname: "Rincón", email: "juan@example.com"}))
@@ -268,7 +268,7 @@ defmodule HangmanWeb.UserControllerTest do
     test "Returns the user name updated", %{params: params} do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -290,7 +290,7 @@ defmodule HangmanWeb.UserControllerTest do
     test "Returns the user lastname updated", %{params: params} do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -312,7 +312,7 @@ defmodule HangmanWeb.UserControllerTest do
     test "Error when 'params' is empty for name" do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -328,7 +328,7 @@ defmodule HangmanWeb.UserControllerTest do
     test "Error when 'id' is empty for name" do
 
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -342,7 +342,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'id' is wrong for name" do
 
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       conn = build_conn()
       response =
         conn
@@ -483,7 +483,7 @@ defmodule HangmanWeb.UserControllerTest do
 
   describe "[POST] /users/reset/pass:" do
     setup do
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       conn = build_conn()
       params = conn
       |> put_req_header("authorization", "Bearer "<>token)
@@ -539,7 +539,7 @@ defmodule HangmanWeb.UserControllerTest do
 
   describe "[DELETE] /users/:id:" do
     setup do
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       conn = build_conn()
       params = conn
       |> put_req_header("authorization", "Bearer "<>token)
@@ -550,7 +550,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Returns the user deleted", %{params: params} do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -571,7 +571,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'id' is empty" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
@@ -585,7 +585,7 @@ defmodule HangmanWeb.UserControllerTest do
 
     test "Error when 'id' is wrong" do
       conn = build_conn()
-      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1})
+      {:ok, token, _} = Guardian.test_token_auth(%{name: "Juan", lastname: "Alcantara", email: "juan@mail.com", id: 1}, "juan@mail.com")
       response =
         conn
         |> put_req_header("authorization", "Bearer "<>token)
