@@ -164,7 +164,6 @@ defmodule Hangman.Accounts do
   end
 
   defp sort_mail(order, attrs) do
-    # from c in Credential, join: u in assoc(c, :user), order_by: ^Keyword.new([{order, String.to_atom(String.downcase(attrs["field"]))}]), offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], preload: [user: u]
     from c in Credential, join: u in User, on: u.id == c.user_id, order_by: ^Keyword.new([{order, String.to_atom(String.downcase(attrs["field"]))}]), offset: ^((String.to_integer(attrs["np"]) - 1) * (String.to_integer(attrs["nr"]))), limit: ^attrs["nr"], select: u
   end
 
