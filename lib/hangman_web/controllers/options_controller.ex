@@ -6,7 +6,7 @@ defmodule HangmanWeb.OptionsController do
       |> resp(204, "")
       |> put_resp_header(
         "acces-control-allow-headers",
-        "authorization, Content-Type, Accept, Origon, User-Agent, DNT, Cache-Control, X-Mx-ReqToken, Keep-Alive, X-Requested-With, If-Modified-Since, X-CSRF-Token, access-control-allow-origin"
+        "authorization, Content-Type, Accept, Origon, User-Agent, DNT, Cache-Control, X-Mx-ReqToken, Keep-Alive, X-Requested-With, If-Modified-Since, X-CSRF-Token, Access-Control-Allow-Origin"
       )
       |> send_resp()
   end

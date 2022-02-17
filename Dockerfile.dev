@@ -15,4 +15,9 @@ COPY docker_dev_start.sh docker_dev_start.sh
 
 # Set exposed ports
 EXPOSE 4000
+
+# Environment variables 
 ENV PORT=4000
+ENV EMAIL_KEY=SG.LuynfvbGSqGZGGnPuzLHOA.25A-3gDkuk5Z91lOv93oivPiwyHWmOyki7fSpHwOW84
+ENV GUARDIAN_KEY=BlYEM0KuywI2iJAT045kADqrkrQao+m8adwiAsw0aR3OFeDvVmTPjkb8B+3Jav0q
+ENV MIX_ENV=dev

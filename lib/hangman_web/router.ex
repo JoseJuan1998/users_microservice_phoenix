@@ -5,7 +5,7 @@ defmodule HangmanWeb.Router do
     plug CORSPlug,
     send_preflight_response?: false,
     origin: [
-      "http://localhost:3000"
+      "http://localhost:3001"
     ]
     plug :accepts, ["json"]
   end
