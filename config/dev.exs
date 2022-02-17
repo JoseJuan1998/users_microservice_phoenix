@@ -5,7 +5,7 @@ config :hangman, Hangman.Repo,
   username: "postgres",
   password: "postgres",
   database: "users_guardian_dev",
-  hostname: "localhost",
+  hostname: "users",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 

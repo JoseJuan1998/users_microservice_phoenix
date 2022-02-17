@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    command: /bin/sh docker_dev_start.sh
+    ports:
+      - "4001:4000"
+    depends_on:
+      - users
+    links:
+      - users
+  users:
+    image: postgres:14
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - "5433:5432"

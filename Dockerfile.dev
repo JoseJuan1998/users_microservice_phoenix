@@ -1,0 +1,18 @@
+FROM bitwalker/alpine-elixir-phoenix:latest
+
+WORKDIR /app
+
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+# Cache elixir deps
+ADD mix.exs mix.lock ./
+RUN mix do deps.get, deps.compile
+
+ADD . .
+
+COPY docker_dev_start.sh docker_dev_start.sh
+
+# Set exposed ports
+EXPOSE 4000
+ENV PORT=4000
